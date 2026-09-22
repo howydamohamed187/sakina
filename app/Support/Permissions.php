@@ -54,6 +54,8 @@ class Permissions
 
     public const RESOURCE_SETTINGS = 'settings';
 
+    public const RESOURCE_NOTIFICATIONS = 'notifications';
+
     public const RESOURCES = [
         self::RESOURCE_ADMINS,
         self::RESOURCE_CUSTOMERS,
@@ -86,6 +88,10 @@ class Permissions
     {
         if ($resource === self::RESOURCE_SETTINGS) {
             return [self::ACTION_VIEW, self::ACTION_UPDATE];
+        }
+
+        if ($resource === self::RESOURCE_NOTIFICATIONS) {
+            return [self::ACTION_VIEW, self::ACTION_CREATE, self::ACTION_DELETE];
         }
 
         $actions = self::ACTIONS;
@@ -127,23 +133,31 @@ class Permissions
             [self::ACCESS_ADMIN],
             self::forResources(self::RESOURCES),
             self::forResource(self::RESOURCE_SETTINGS),
+            self::forResource(self::RESOURCE_NOTIFICATIONS),
         );
     }
 
     public static function namesForGroup(string $group): array
     {
         return match ($group) {
-            'create' => self::forAction(self::ACTION_CREATE),
+            'create' => array_merge(
+                self::forAction(self::ACTION_CREATE),
+                [self::name(self::RESOURCE_NOTIFICATIONS, self::ACTION_CREATE)],
+            ),
             'update' => array_merge(
                 self::forAction(self::ACTION_UPDATE),
                 [self::name(self::RESOURCE_SETTINGS, self::ACTION_UPDATE)],
             ),
-            'delete' => self::forAction(self::ACTION_DELETE),
+            'delete' => array_merge(
+                self::forAction(self::ACTION_DELETE),
+                [self::name(self::RESOURCE_NOTIFICATIONS, self::ACTION_DELETE)],
+            ),
             'restore' => self::forAction(self::ACTION_RESTORE, self::TRASHABLE_RESOURCES),
             'other' => array_merge(
                 [self::ACCESS_ADMIN],
                 self::forAction(self::ACTION_VIEW),
                 [self::name(self::RESOURCE_SETTINGS, self::ACTION_VIEW)],
+                [self::name(self::RESOURCE_NOTIFICATIONS, self::ACTION_VIEW)],
             ),
             default => [],
         };

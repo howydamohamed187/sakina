@@ -44,6 +44,7 @@ class RolesSeeder extends Seeder
                 Permissions::RESOURCE_DUAS,
             ]),
             Permissions::forResource(Permissions::RESOURCE_SETTINGS),
+            Permissions::forResource(Permissions::RESOURCE_NOTIFICATIONS),
         ));
 
         Role::firstOrCreate(['name' => Roles::CUSTOMER, 'guard_name' => 'web']);

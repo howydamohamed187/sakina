@@ -1,6 +1,6 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        <div class="flex flex-col gap-1 py-8 text-start">
+        <div class="flex flex-col gap-1 py-4 text-start">
             <h1 class="text-xl font-semibold tracking-tight text-gray-950 dark:text-white">
                 {{ __('app.welcome.title') }}
             </h1>

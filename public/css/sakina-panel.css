@@ -249,3 +249,25 @@ body.fi-body {
 .sakina-daily-question-hero__stats dd.is-correct {
     color: #16a34a;
 }
+
+.fi-wi-stats-overview {
+    gap: 1rem !important;
+}
+
+.fi-wi-stats-overview-stat,
+.fi-stats-overview-stat {
+    background: var(--sakina-card) !important;
+    border: 1px solid var(--sakina-border) !important;
+    border-radius: var(--sakina-radius) !important;
+    box-shadow: none !important;
+}
+
+.fi-wi-chart,
+.fi-wi-table {
+    height: 100%;
+}
+
+.fi-wi-chart .fi-section,
+.fi-wi-table .fi-ta-ctn {
+    height: 100%;
+}

@@ -59,6 +59,7 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()->label(fn (): string => __('app.nav.hadiths')),
                 NavigationGroup::make()->label(fn (): string => __('app.nav.adhkar')),
                 NavigationGroup::make()->label(fn (): string => __('app.nav.duas')),
+                NavigationGroup::make()->label(fn (): string => __('app.nav.notifications')),
                 NavigationGroup::make()->label(fn (): string => __('app.nav.permission_management')),
                 NavigationGroup::make()->label(fn (): string => __('settings.nav')),
             ])

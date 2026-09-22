@@ -35,15 +35,20 @@ class Locales
 
     public static function resolveFromRequest(Request $request): string
     {
+        $user = self::userFromRequest($request);
+
         $candidates = [
             $request->header('X-Locale'),
             $request->query('locale'),
             $request->input('locale'),
         ];
 
-        if ($request->user()) {
-            $candidates[] = $request->user()->locale;
-            $candidates[] = $request->hasSession() ? $request->session()->get('locale') : null;
+        if ($request->hasSession()) {
+            $candidates[] = $request->session()->get('locale');
+        }
+
+        if ($user && is_object($user) && isset($user->locale)) {
+            $candidates[] = $user->locale;
         } elseif ($request->is('api/*') || $request->expectsJson()) {
             $candidates[] = $request->getPreferredLanguage(self::all());
         }
@@ -57,6 +62,23 @@ class Locales
         }
 
         return self::default();
+    }
+
+    public static function userFromRequest(Request $request): mixed
+    {
+        foreach (['admin', 'web', 'customer', 'sanctum'] as $guard) {
+            try {
+                $user = $request->user($guard);
+            } catch (\Throwable) {
+                continue;
+            }
+
+            if ($user) {
+                return $user;
+            }
+        }
+
+        return $request->user();
     }
 
     public static function pick(mixed $value, ?string $locale = null): mixed

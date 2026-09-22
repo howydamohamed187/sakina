@@ -1,4 +1,7 @@
-<script>document.documentElement.setAttribute("dir", @json(\App\Support\Locales::isRtl() ? "rtl" : "ltr"));</script>
+<script>
+    document.documentElement.setAttribute("lang", @json(app()->getLocale()));
+    document.documentElement.setAttribute("dir", @json(\App\Support\Locales::isRtl() ? "rtl" : "ltr"));
+</script>
 <link rel="stylesheet" href="{{ asset('css/sakina-panel.css') }}?v={{ filemtime(public_path('css/sakina-panel.css')) }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

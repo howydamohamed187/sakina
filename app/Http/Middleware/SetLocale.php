@@ -15,7 +15,7 @@ class SetLocale
 
         app()->setLocale($locale);
 
-        if ($request->hasSession()) {
+        if ($request->hasSession() && ! $request->is('api/*')) {
             $request->session()->put('locale', $locale);
         }
 
