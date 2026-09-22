@@ -9,11 +9,17 @@ class Dashboard extends BaseDashboard
 {
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
-    protected static ?string $title = 'لوحة التحكم';
-
-    protected static ?string $navigationLabel = 'الرئيسية';
-
     protected static ?int $navigationSort = 0;
+
+    public function getTitle(): string
+    {
+        return __('app.dashboard');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('app.home');
+    }
 
     public function getWidgets(): array
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,41 +20,41 @@ class AuthController extends ApiController
         $user = User::query()->where('email', $credentials['email'])->first();
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
-            return $this->error('بيانات الدخول غير صحيحة.', [], 401);
+            return $this->error(__('api.login_failed'), [], 401);
         }
 
         if ($user->status !== 'active') {
-            return $this->error('الحساب غير نشط.', [], 403);
+            return $this->error(__('api.account_inactive'), [], 403);
+        }
+
+        if (! $user->canAccessAdmin()) {
+            return $this->error(__('api.login_no_role'), [], 403);
         }
 
         $token = $user->createToken('api')->plainTextToken;
 
+        if ($request->filled('locale')) {
+            $user->forceFill(['locale' => app()->getLocale()])->save();
+        }
+
         return $this->success([
             'token' => $token,
             'token_type' => 'Bearer',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
-        ], 'تم تسجيل الدخول بنجاح.');
+            'user' => (new UserResource($user->load('roles')))->resolve(),
+        ], __('api.login_success'));
     }
 
     public function me(Request $request): JsonResponse
     {
-        $user = $request->user();
-
-        return $this->success([
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-        ]);
+        return $this->success(
+            (new UserResource($request->user()->load('roles')))->resolve()
+        );
     }
 
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()?->delete();
 
-        return $this->success(null, 'تم تسجيل الخروج بنجاح.');
+        return $this->success(null, __('api.logout_success'));
     }
 }

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Notifications\LocalizedNotification;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,9 +18,15 @@ class AdminSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'status' => 'active',
+                'locale' => 'ar',
+                'theme' => 'system',
             ],
         );
 
         $admin->assignRole('super_admin');
+
+        if ($admin->notifications()->count() === 0) {
+            $admin->notify(new LocalizedNotification('welcome'));
+        }
     }
 }

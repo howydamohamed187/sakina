@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -9,34 +10,18 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class ApiController extends Controller
 {
-    protected function success(mixed $data = null, string $message = 'success', int $status = 200): JsonResponse
+    protected function success(mixed $data = null, ?string $message = null, int $status = 200): JsonResponse
     {
-        return response()->json([
-            'data' => $data,
-            'message' => $message,
-            'meta' => null,
-        ], $status);
+        return ApiResponse::json($status, $message ?? __('api.success'), $data);
     }
 
-    protected function error(string $message, array $errors = [], int $status = 422): JsonResponse
+    protected function error(string $message, array $errors = [], int $status = 422, mixed $data = null): JsonResponse
     {
-        return response()->json([
-            'message' => $message,
-            'errors' => $errors,
-        ], $status);
+        return ApiResponse::json($status, $message, $data, $errors);
     }
 
     protected function paginated(AnonymousResourceCollection $resource, LengthAwarePaginator $paginator): JsonResponse
     {
-        return response()->json([
-            'data' => $resource,
-            'message' => 'success',
-            'meta' => [
-                'current_page' => $paginator->currentPage(),
-                'last_page' => $paginator->lastPage(),
-                'per_page' => $paginator->perPage(),
-                'total' => $paginator->total(),
-            ],
-        ]);
+        return ApiResponse::json(200, __('api.success'), $resource->resolve());
     }
 }
