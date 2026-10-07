@@ -13,15 +13,20 @@ use App\Support\Permissions;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\Section as InfoSection;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -75,6 +80,11 @@ class DhikrResource extends Resource
                         ->required()
                         ->rows(6)
                         ->columnSpanFull(),
+                    Textarea::make('description')
+                        ->label(__('app.fields.dhikr_description'))
+                        ->rows(3)
+                        ->maxLength(2000)
+                        ->columnSpanFull(),
                     Select::make('category')
                         ->label(__('app.fields.dhikr_category'))
                         ->options(DhikrCategories::options())
@@ -82,6 +92,28 @@ class DhikrResource extends Resource
                         ->native(false),
                     AdminForm::statusToggle(),
                 ]),
+                AdminForm::section(__('app.admin_form.tasbeeh'), [
+                    Toggle::make('is_countable')
+                        ->label(__('app.fields.is_countable'))
+                        ->helperText(__('app.fields.is_countable_hint'))
+                        ->onColor('success')
+                        ->inline(false)
+                        ->default(false)
+                        ->live(),
+                    TextInput::make('target_count')
+                        ->label(__('app.fields.target_count'))
+                        ->integer()
+                        ->minValue(1)
+                        ->maxValue(100000)
+                        ->required(fn (Get $get): bool => (bool) $get('is_countable'))
+                        ->visible(fn (Get $get): bool => (bool) $get('is_countable')),
+                    TextInput::make('sort_order')
+                        ->label(__('app.fields.sort_order'))
+                        ->integer()
+                        ->minValue(0)
+                        ->required()
+                        ->default(fn (): int => (int) Dhikr::query()->max('sort_order') + 1),
+                ], 3),
             ]);
     }
 
@@ -96,12 +128,24 @@ class DhikrResource extends Resource
                         TextEntry::make('body')
                             ->label(__('app.fields.dhikr_body'))
                             ->columnSpanFull(),
+                        TextEntry::make('description')
+                            ->label(__('app.fields.dhikr_description'))
+                            ->placeholder('—')
+                            ->columnSpanFull(),
                         TextEntry::make('category')
                             ->label(__('app.fields.dhikr_category'))
                             ->formatStateUsing(fn (?string $state): string => DhikrCategories::label($state)),
                         TextEntry::make('favorites_count')
                             ->label(__('app.fields.favorite_count'))
                             ->state(fn (Dhikr $record): int => $record->favoritesCount()),
+                        IconEntry::make('is_countable')
+                            ->label(__('app.fields.is_countable'))
+                            ->boolean(),
+                        TextEntry::make('target_count')
+                            ->label(__('app.fields.target_count'))
+                            ->placeholder('—'),
+                        TextEntry::make('sort_order')
+                            ->label(__('app.fields.sort_order')),
                         TextEntry::make('status')
                             ->label(__('app.fields.status'))
                             ->badge()
@@ -140,6 +184,18 @@ class DhikrResource extends Resource
                 TextColumn::make('favorites_count')
                     ->label(__('app.fields.favorite_count'))
                     ->sortable(),
+                IconColumn::make('is_countable')
+                    ->label(__('app.fields.is_countable'))
+                    ->boolean()
+                    ->sortable(),
+                TextColumn::make('target_count')
+                    ->label(__('app.fields.target_count'))
+                    ->placeholder('—')
+                    ->sortable(),
+                TextColumn::make('sort_order')
+                    ->label(__('app.fields.sort_order'))
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
                     ->label(__('app.fields.status'))
                     ->badge()
@@ -158,6 +214,8 @@ class DhikrResource extends Resource
                 SelectFilter::make('category')
                     ->label(__('app.fields.dhikr_category'))
                     ->options(DhikrCategories::options()),
+                TernaryFilter::make('is_countable')
+                    ->label(__('app.fields.is_countable')),
                 static::trashFilter(),
             ])
             ->actions([

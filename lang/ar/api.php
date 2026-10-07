@@ -46,6 +46,8 @@ return [
     'hadith_favorited' => 'تمت إضافة الحديث إلى المفضلة.',
     'hadith_unfavorited' => 'تمت إزالة الحديث من المفضلة.',
     'adhkar_ready' => 'تم جلب الأذكار.',
+    'tasbeehs_ready' => 'تم جلب أذكار السبحة.',
+    'tasbeeh_progress_saved' => 'تم حفظ تقدم التسبيح.',
     'dhikr_favorited' => 'تمت إضافة الذكر إلى المفضلة.',
     'dhikr_unfavorited' => 'تمت إزالة الذكر من المفضلة.',
     'duas_ready' => 'تم جلب الأدعية.',

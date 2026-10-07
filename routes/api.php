@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\QuranController;
 use App\Http\Controllers\Api\SettingsController;
+use App\Http\Controllers\Api\TasbeehController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -97,6 +98,10 @@ Route::prefix('v1')->group(function () {
         Route::get('duas/{dua}', [DuaController::class, 'show']);
         Route::post('duas/{dua}/favorite', [DuaController::class, 'favorite']);
         Route::delete('duas/{dua}/favorite', [DuaController::class, 'unfavorite']);
+
+        Route::get('tasbeehs', [TasbeehController::class, 'index']);
+        Route::get('tasbeehs/{dhikr}', [TasbeehController::class, 'show']);
+        Route::post('tasbeehs/{dhikr}/progress', [TasbeehController::class, 'progress'])->middleware('throttle:60,1');
 
         Route::prefix('quran')->group(function () {
             Route::get('/', [QuranController::class, 'index']);

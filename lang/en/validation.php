@@ -193,6 +193,8 @@ return [
     */
 
     'attributes' => [
+        'current_count' => 'current count',
+        'total_count' => 'total count',
         'name' => 'name',
         'first_name' => 'first name',
         'last_name' => 'last name',

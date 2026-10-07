@@ -21,7 +21,7 @@ class CreateDhikr extends CreateRecord
      */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['sort_order'] = (int) Dhikr::query()->max('sort_order') + 1;
+        $data['sort_order'] ??= (int) Dhikr::query()->max('sort_order') + 1;
 
         return $data;
     }

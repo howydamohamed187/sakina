@@ -12,9 +12,11 @@ class DhikrCategories
 
     public const PRAYER = 'prayer';
 
+    public const GENERAL = 'general';
+
     public static function all(): array
     {
-        return [self::MORNING, self::EVENING, self::SLEEP, self::PRAYER];
+        return [self::MORNING, self::EVENING, self::SLEEP, self::PRAYER, self::GENERAL];
     }
 
     public static function options(): array

@@ -193,6 +193,8 @@ return [
     */
 
     'attributes' => [
+        'current_count' => 'العدد الحالي',
+        'total_count' => 'إجمالي عدد التسبيحات',
         'name' => 'الاسم',
         'first_name' => 'الاسم الأول',
         'last_name' => 'اسم العائلة',

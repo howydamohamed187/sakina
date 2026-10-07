@@ -16,8 +16,7 @@ class DatabaseSeeder extends Seeder
             DailyQuestionsSeeder::class,
             HadithsSeeder::class,
             AdhkarSeeder::class,
-            DuasSeeder::class,
-            QuranSeeder::class,
+            DuasSeeder::class,            QuranSeeder::class,
         ]);
     }
 }

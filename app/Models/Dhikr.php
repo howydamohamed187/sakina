@@ -19,7 +19,10 @@ class Dhikr extends Model
     protected $fillable = [
         'title',
         'body',
+        'description',
         'category',
+        'is_countable',
+        'target_count',
         'status',
         'sort_order',
     ];
@@ -27,13 +30,29 @@ class Dhikr extends Model
     protected function casts(): array
     {
         return [
+            'is_countable' => 'boolean',
+            'target_count' => 'integer',
             'sort_order' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (Dhikr $dhikr): void {
+            if (! $dhikr->is_countable) {
+                $dhikr->target_count = null;
+            }
+        });
     }
 
     public function favorites(): HasMany
     {
         return $this->hasMany(DhikrFavorite::class);
+    }
+
+    public function progress(): HasMany
+    {
+        return $this->hasMany(DhikrProgress::class);
     }
 
     public function favoritedBy(): BelongsToMany
@@ -47,9 +66,24 @@ class Dhikr extends Model
         return $query->where('status', 'active');
     }
 
+    public function scopeCountable(Builder $query): Builder
+    {
+        return $query->where('is_countable', true)->whereNotNull('target_count');
+    }
+
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('sort_order')->orderBy('id');
+    }
+
     public function isActive(): bool
     {
         return $this->status === 'active';
+    }
+
+    public function isAvailableForTasbeeh(): bool
+    {
+        return $this->isActive() && $this->is_countable && $this->target_count > 0;
     }
 
     public function favoritesCount(): int

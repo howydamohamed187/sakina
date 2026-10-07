@@ -46,6 +46,8 @@ return [
     'hadith_favorited' => 'فەرموودەکە زیادکرا بۆ دڵخواز.',
     'hadith_unfavorited' => 'فەرموودەکە لە دڵخواز لابرا.',
     'adhkar_ready' => 'ذکرەکان هێنران.',
+    'tasbeehs_ready' => 'ذکرەکانی تەزبیح هێنران.',
+    'tasbeeh_progress_saved' => 'پێشکەوتنی تەزبیح پاشەکەوت کرا.',
     'dhikr_favorited' => 'ذکرەکە زیادکرا بۆ دڵخواز.',
     'dhikr_unfavorited' => 'ذکرەکە لە دڵخواز لابرا.',
     'duas_ready' => 'دوعاکان هێنران.',

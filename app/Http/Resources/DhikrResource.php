@@ -24,6 +24,7 @@ class DhikrResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'body' => $this->body,
+            'description' => $this->description,
             'category' => $this->category,
             'category_label' => DhikrCategories::label($this->category),
             'is_favorite' => $this->isFavoritedBy($this->customer) ? 1 : 0,

@@ -193,6 +193,8 @@ return [
     */
 
     'attributes' => [
+        'current_count' => 'ژمارەی ئێستا',
+        'total_count' => 'کۆی ژمارەی تەسبیحەکان',
         'name' => 'ناو',
         'email' => 'ئیمەیڵ',
         'phone' => 'ژمارەی مۆبایل',
