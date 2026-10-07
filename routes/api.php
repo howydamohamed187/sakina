@@ -9,8 +9,11 @@ use App\Http\Controllers\Api\DailyQuestionController;
 use App\Http\Controllers\Api\DhikrController;
 use App\Http\Controllers\Api\DuaController;
 use App\Http\Controllers\Api\HadithController;
+use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\MosqueController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\QuranController;
 use App\Http\Controllers\Api\SettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +30,12 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::get('app-config', [AppConfigController::class, 'show']);
+
+    Route::get('home/layout', [HomeController::class, 'layout']);
+
+    Route::get('mosques/photo', [MosqueController::class, 'photo'])
+        ->middleware('signed')
+        ->name('api.mosques.photo');
 
     Route::prefix('auth')->group(function () {
         Route::post('login', [CustomerAuthController::class, 'login'])
@@ -69,6 +78,8 @@ Route::prefix('v1')->group(function () {
         Route::post('location', [CustomerProfileController::class, 'updateLocation']);
         Route::put('location', [CustomerProfileController::class, 'updateLocation']);
 
+        Route::get('home', [HomeController::class, 'index']);
+
         Route::get('daily-question', [DailyQuestionController::class, 'show']);
         Route::post('daily-question/answer', [DailyQuestionController::class, 'answer']);
 
@@ -86,6 +97,18 @@ Route::prefix('v1')->group(function () {
         Route::get('duas/{dua}', [DuaController::class, 'show']);
         Route::post('duas/{dua}/favorite', [DuaController::class, 'favorite']);
         Route::delete('duas/{dua}/favorite', [DuaController::class, 'unfavorite']);
+
+        Route::prefix('quran')->group(function () {
+            Route::get('/', [QuranController::class, 'index']);
+            Route::get('surahs', [QuranController::class, 'surahs']);
+            Route::get('surahs/{surah}', [QuranController::class, 'surah']);
+            Route::get('surahs/{surah}/ayahs', [QuranController::class, 'ayahs']);
+            Route::get('ayahs/{ayah}/tafsir', [QuranController::class, 'tafsir']);
+            Route::get('reciters', [QuranController::class, 'reciters']);
+            Route::get('reciters/{reciter}/surahs/{surah}/audio', [QuranController::class, 'audio']);
+        });
+
+        Route::get('mosques/nearby', [MosqueController::class, 'nearby'])->middleware('throttle:60,1');
 
         Route::get('notifications', [NotificationController::class, 'index']);
         Route::post('notifications/read-all', [NotificationController::class, 'markAllRead']);

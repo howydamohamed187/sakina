@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Filament\Forms\TranslatableFields;
 use App\Notifications\ResetPasswordNotification;
+use App\Services\Mosques\Contracts\MosqueProvider;
+use App\Services\Mosques\Providers\GooglePlacesProvider;
+use App\Services\Mosques\Providers\OverpassProvider;
 use App\Support\Locales;
 use App\Support\StoredSettings;
 use Filament\Forms\Components\Section;
@@ -19,6 +22,19 @@ class AppServiceProvider extends ServiceProvider
             LogoutController::class,
             \App\Http\Controllers\Auth\LogoutController::class
         );
+
+        $this->app->bind(MosqueProvider::class, fn (): MosqueProvider => match (config('services.places.provider')) {
+            'google' => new GooglePlacesProvider(
+                config('services.places.key'),
+                (string) config('services.places.google_url'),
+                (int) config('services.places.timeout', 10),
+            ),
+            default => new OverpassProvider(
+                array_values((array) config('services.places.overpass_urls')),
+                (int) config('services.places.overpass_timeout', 15),
+                (int) config('services.places.overpass_budget', 25),
+            ),
+        });
 
         $this->app->bind(
             ResetPassword::class,

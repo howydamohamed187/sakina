@@ -16,6 +16,7 @@ class DailyQuestionResource extends JsonResource
         $resource,
         private readonly ?DailyQuestionAssignment $assignment = null,
         private readonly ?DailyQuestionAnswer $answer = null,
+        private readonly array $stats = [],
     ) {
         parent::__construct($resource);
     }
@@ -42,6 +43,9 @@ class DailyQuestionResource extends JsonResource
             'answered' => $answered ? 1 : 0,
             'selected_option_id' => $this->answer?->daily_question_option_id,
             'is_correct' => $answered ? (int) $this->answer->is_correct : null,
+            'correct_option_id' => $answered ? $this->correctOption()?->id : null,
+            'participations_count' => (int) ($this->stats['participations_count'] ?? 0),
+            'correct_answers_count' => (int) ($this->stats['correct_answers_count'] ?? 0),
             'answers' => $answers,
         ];
     }

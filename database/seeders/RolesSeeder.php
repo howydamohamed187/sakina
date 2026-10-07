@@ -42,6 +42,8 @@ class RolesSeeder extends Seeder
                 Permissions::RESOURCE_HADITHS,
                 Permissions::RESOURCE_ADHKAR,
                 Permissions::RESOURCE_DUAS,
+                Permissions::RESOURCE_QURAN,
+                Permissions::RESOURCE_QURAN_RECITERS,
             ]),
             Permissions::forResource(Permissions::RESOURCE_SETTINGS),
             Permissions::forResource(Permissions::RESOURCE_NOTIFICATIONS),

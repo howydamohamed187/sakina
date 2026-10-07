@@ -52,6 +52,10 @@ class Permissions
 
     public const RESOURCE_DUAS = 'duas';
 
+    public const RESOURCE_QURAN = 'quran';
+
+    public const RESOURCE_QURAN_RECITERS = 'quran_reciters';
+
     public const RESOURCE_SETTINGS = 'settings';
 
     public const RESOURCE_NOTIFICATIONS = 'notifications';
@@ -66,6 +70,8 @@ class Permissions
         self::RESOURCE_HADITHS,
         self::RESOURCE_ADHKAR,
         self::RESOURCE_DUAS,
+        self::RESOURCE_QURAN,
+        self::RESOURCE_QURAN_RECITERS,
     ];
 
     public const TRASHABLE_RESOURCES = [
@@ -86,7 +92,7 @@ class Permissions
 
     public static function actionsFor(string $resource): array
     {
-        if ($resource === self::RESOURCE_SETTINGS) {
+        if ($resource === self::RESOURCE_SETTINGS || $resource === self::RESOURCE_QURAN) {
             return [self::ACTION_VIEW, self::ACTION_UPDATE];
         }
 

@@ -28,6 +28,25 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
+    /*
+    | Nearby mosques provider: "google" (Places API New, needs PLACES_API_KEY)
+    | or "overpass" (OpenStreetMap, no key).
+    */
+    'places' => [
+        'provider' => env('PLACES_PROVIDER', 'overpass'),
+        'key' => env('PLACES_API_KEY'),
+        'timeout' => (int) env('PLACES_TIMEOUT', 10),
+        'cache_ttl' => (int) env('PLACES_CACHE_TTL', 86400),
+        'google_url' => env('PLACES_GOOGLE_URL', 'https://places.googleapis.com/v1'),
+        'overpass_urls' => array_filter(explode(',', (string) env(
+            'PLACES_OVERPASS_URLS',
+            'https://overpass-api.de/api/interpreter,https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+        ))),
+        'overpass_timeout' => (int) env('PLACES_OVERPASS_TIMEOUT', 15),
+        'overpass_budget' => (int) env('PLACES_OVERPASS_BUDGET', 25),
+        'stale_ttl' => (int) env('PLACES_STALE_TTL', 2592000),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

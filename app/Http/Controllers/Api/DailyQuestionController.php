@@ -20,10 +20,8 @@ class DailyQuestionController extends ApiController
             return $customer;
         }
 
-        $payload = $this->questions->todayFor($customer);
-
         return $this->success(
-            (new DailyQuestionResource($payload['question'], $payload['assignment'], $payload['answer']))->resolve(),
+            $this->payload($customer),
             __('api.daily_question_ready')
         );
     }
@@ -40,15 +38,26 @@ class DailyQuestionController extends ApiController
             'option_id' => ['required', 'integer'],
         ]);
 
-        $this->questions->answer($customer, (int) $data['option_id']);
-        $payload = $this->questions->todayFor($customer);
+        $answer = $this->questions->answer($customer, (int) $data['option_id']);
 
         return $this->success(
-            (new DailyQuestionResource($payload['question'], $payload['assignment'], $payload['answer']))->resolve(),
-            $payload['answer']?->is_correct
+            $this->payload($customer),
+            $answer->is_correct
                 ? __('api.daily_question_correct')
                 : __('api.daily_question_wrong')
         );
+    }
+
+    private function payload(Customer $customer): array
+    {
+        $payload = $this->questions->todayFor($customer);
+
+        return (new DailyQuestionResource(
+            $payload['question'],
+            $payload['assignment'],
+            $payload['answer'],
+            $this->questions->statsFor($customer),
+        ))->resolve();
     }
 
     private function customer(Request $request): Customer|JsonResponse

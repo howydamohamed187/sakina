@@ -93,6 +93,22 @@ class DailyQuestionService
         return $answer;
     }
 
+    /**
+     * @return array{participations_count: int, correct_answers_count: int}
+     */
+    public function statsFor(Customer $customer): array
+    {
+        $stats = DailyQuestionAnswer::query()
+            ->where('customer_id', $customer->id)
+            ->selectRaw('COUNT(*) as participations, SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) as correct')
+            ->first();
+
+        return [
+            'participations_count' => (int) ($stats?->participations ?? 0),
+            'correct_answers_count' => (int) ($stats?->correct ?? 0),
+        ];
+    }
+
     private function pickRandomUnseen(Customer $customer): ?DailyQuestion
     {
         $cycle = $this->currentCycle($customer);
