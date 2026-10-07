@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Services\PrayerTimes\Contracts\PrayerTimesProvider;
 use App\Services\PrayerTimes\PrayerTimeCalculator;
+use App\Services\Providers\ProviderException;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use DateTimeZone;
@@ -17,45 +19,71 @@ class PrayerTimesService
     /** @var array<string, array{0: float, 1: float}>|null */
     private static ?array $zoneLocations = null;
 
-    public function __construct(private readonly PrayerTimeCalculator $calculator) {}
+    public function __construct(private readonly PrayerTimesProvider $provider) {}
 
     /**
-     * @return array<string, CarbonImmutable>
+     * @return list<string>
      */
-    public function getTodayPrayerTimes(float $latitude, float $longitude, ?string $timezone = null): array
+    public static function methods(): array
     {
-        $timezone ??= $this->resolveTimezone($latitude, $longitude);
+        return array_keys(PrayerTimeCalculator::METHODS);
+    }
 
-        return $this->getPrayerTimes($latitude, $longitude, CarbonImmutable::now($timezone), $timezone);
+    public function defaultMethod(): string
+    {
+        return (string) config('prayer_times.calculation_method', 'egyptian');
+    }
+
+    public function providerName(): string
+    {
+        return $this->provider->name();
     }
 
     /**
      * @return array<string, CarbonImmutable>
+     *
+     * @throws ProviderException
      */
-    public function getTomorrowPrayerTimes(float $latitude, float $longitude, ?string $timezone = null): array
+    public function getTodayPrayerTimes(float $latitude, float $longitude, ?string $timezone = null, ?string $method = null): array
     {
         $timezone ??= $this->resolveTimezone($latitude, $longitude);
 
-        return $this->getPrayerTimes($latitude, $longitude, CarbonImmutable::now($timezone)->addDay(), $timezone);
+        return $this->getPrayerTimes($latitude, $longitude, CarbonImmutable::now($timezone), $timezone, $method);
+    }
+
+    /**
+     * @return array<string, CarbonImmutable>
+     *
+     * @throws ProviderException
+     */
+    public function getTomorrowPrayerTimes(float $latitude, float $longitude, ?string $timezone = null, ?string $method = null): array
+    {
+        $timezone ??= $this->resolveTimezone($latitude, $longitude);
+
+        return $this->getPrayerTimes($latitude, $longitude, CarbonImmutable::now($timezone)->addDay(), $timezone, $method);
     }
 
     /**
      * Prayer times (including sunrise) for the local calendar day of $date in $timezone.
      *
      * @return array<string, CarbonImmutable>
+     *
+     * @throws ProviderException
      */
-    public function getPrayerTimes(float $latitude, float $longitude, CarbonInterface $date, ?string $timezone = null): array
+    public function getPrayerTimes(float $latitude, float $longitude, CarbonInterface $date, ?string $timezone = null, ?string $method = null): array
     {
         $timezone ??= $this->resolveTimezone($latitude, $longitude);
+        $method ??= $this->defaultMethod();
         $day = CarbonImmutable::parse($date->format('Y-m-d'), $timezone);
 
         $key = implode(':', [
             'prayer_times',
+            $this->provider->name(),
             $day->toDateString(),
             round($latitude, 4),
             round($longitude, 4),
             $timezone,
-            config('prayer_times.calculation_method'),
+            $method,
             config('prayer_times.asr_method'),
             config('prayer_times.high_latitude_rule'),
             md5(json_encode(config('prayer_times.adjustments', []))),
@@ -64,7 +92,10 @@ class PrayerTimesService
         $times = Cache::remember(
             $key,
             (int) config('prayer_times.cache_ttl', 172800),
-            fn () => $this->calculate($latitude, $longitude, $day, $timezone)
+            fn () => array_map(
+                fn (CarbonImmutable $time): string => $time->setTimezone($timezone)->toIso8601String(),
+                $this->provider->times($latitude, $longitude, $day, $timezone, $method)
+            )
         );
 
         return array_map(
@@ -131,29 +162,6 @@ class PrayerTimesService
         }
 
         return $nearest;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function calculate(float $latitude, float $longitude, CarbonImmutable $day, string $timezone): array
-    {
-        $times = $this->calculator->calculate(
-            latitude: $latitude,
-            longitude: $longitude,
-            year: $day->year,
-            month: $day->month,
-            day: $day->day,
-            method: (string) config('prayer_times.calculation_method', 'egyptian'),
-            asrMethod: (string) config('prayer_times.asr_method', 'standard'),
-            highLatitudeRule: (string) config('prayer_times.high_latitude_rule', 'middle_of_night'),
-            adjustments: (array) config('prayer_times.adjustments', []),
-        );
-
-        return array_map(
-            fn (CarbonImmutable $utc) => $utc->setTimezone($timezone)->toIso8601String(),
-            $times
-        );
     }
 
     /**

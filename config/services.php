@@ -47,6 +47,28 @@ return [
         'stale_ttl' => (int) env('PLACES_STALE_TTL', 2592000),
     ],
 
+    /*
+    | Prayer times: "local" (built-in astronomical calculator, no network) or
+    | "aladhan" (https://aladhan.com/prayer-times-api, no key required).
+    */
+    'prayer_times' => [
+        'provider' => env('PRAYER_TIMES_PROVIDER', 'local'),
+        'url' => env('PRAYER_TIMES_API_URL', 'https://api.aladhan.com/v1'),
+        'key' => env('PRAYER_TIMES_API_KEY'),
+        'timeout' => (int) env('PRAYER_TIMES_TIMEOUT', 10),
+    ],
+
+    /*
+    | Quran translations and tafsir (the Arabic text itself is the local Tanzil
+    | source). "alquran_cloud": https://alquran.cloud/api, no key required.
+    */
+    'quran' => [
+        'provider' => env('QURAN_PROVIDER', 'alquran_cloud'),
+        'url' => env('QURAN_API_URL', 'https://api.alquran.cloud/v1'),
+        'key' => env('QURAN_API_KEY'),
+        'timeout' => (int) env('QURAN_TIMEOUT', 15),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

@@ -3,7 +3,11 @@
 use App\Http\ApiResponse;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\ThrottleAttempts;
+use App\Models\QuranAyah;
+use App\Models\QuranReciter;
+use App\Models\QuranSurah;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -62,6 +66,15 @@ return Application::configure(basePath: dirname(__DIR__))
 
             $status = $e->getStatusCode();
             $message = $e->getMessage() !== '' ? $e->getMessage() : __('api.http_error');
+
+            if ($e->getPrevious() instanceof ModelNotFoundException) {
+                $message = match ($e->getPrevious()->getModel()) {
+                    QuranSurah::class => __('api.quran.surah_not_found'),
+                    QuranAyah::class => __('api.quran.ayah_not_found'),
+                    QuranReciter::class => __('api.quran.reciter_not_found'),
+                    default => __('api.not_found'),
+                };
+            }
 
             return ApiResponse::json($status, $message, null);
         });

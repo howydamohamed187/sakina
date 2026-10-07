@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Services\HomeService;
+use App\Services\Providers\ProviderException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -41,12 +42,16 @@ class HomeController extends ApiController
             return $this->error(__('api.location_headers_required'), $validator->errors()->toArray());
         }
 
-        $data = $this->home->data(
-            user: $request->user(),
-            latitude: (float) $request->header('X-Latitude'),
-            longitude: (float) $request->header('X-Longitude'),
-            timezone: $request->header('X-Timezone') ?: null,
-        );
+        try {
+            $data = $this->home->data(
+                user: $request->user(),
+                latitude: (float) $request->header('X-Latitude'),
+                longitude: (float) $request->header('X-Longitude'),
+                timezone: $request->header('X-Timezone') ?: null,
+            );
+        } catch (ProviderException $e) {
+            return $this->error($e->userMessage(), [], $e->status());
+        }
 
         return $this->success($data, __('api.home_ready'));
     }

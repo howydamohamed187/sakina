@@ -35,4 +35,25 @@ return [
 
     'tafsir_fallback_locale' => 'ar',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Provider Editions
+    |--------------------------------------------------------------------------
+    |
+    | Locale => edition identifier at the Quran provider (services.quran).
+    | Locales without an edition are reported as unsupported.
+    | https://api.alquran.cloud/v1/edition lists every available edition.
+    |
+    */
+
+    'editions' => [
+        'translations' => [
+            'en' => env('QURAN_TRANSLATION_EN', 'en.sahih'),
+            'ckb' => env('QURAN_TRANSLATION_CKB', 'ku.asan'),
+        ],
+        'tafsirs' => [
+            'ar' => env('QURAN_TAFSIR_AR', 'ar.muyassar'),
+        ],
+    ],
+
 ];

@@ -55,6 +55,13 @@ return [
     'dua_unfavorited' => 'The dua was removed from favorites.',
     'home_ready' => 'Home data retrieved successfully',
     'home_layout_ready' => 'Home layout retrieved successfully',
+    'prayer_times_ready' => 'Prayer times loaded.',
+    'provider_errors' => [
+        'timeout' => 'The external service did not respond in time, please try again.',
+        'failed' => 'The external service is currently unavailable, please try later.',
+        'invalid_response' => 'Unexpected response from the external service.',
+        'not_configured' => 'The external service is not configured.',
+    ],
     'mosques' => [
         'ready' => 'Nearby mosques loaded.',
         'none' => 'No mosques found within this radius.',
@@ -75,6 +82,14 @@ return [
         'tafsir_unavailable' => 'Tafsir is not available for this ayah.',
         'reciters_ready' => 'Reciters loaded.',
         'audio_ready' => 'Recitation loaded.',
+        'search_ready' => 'Quran search completed.',
+        'ayah_ready' => 'Ayah loaded.',
+        'reciter_ready' => 'Reciter loaded.',
+        'surah_not_found' => 'Surah not found.',
+        'ayah_not_found' => 'Ayah not found.',
+        'reciter_not_found' => 'Reciter not found.',
+        'surah_audio_unsupported' => 'Full-surah audio is not available for this reciter.',
+        'ayah_audio_unsupported' => 'Ayah-by-ayah audio is not available for this reciter.',
         'title' => 'The Holy Quran',
         'introduction' => [
             'title' => 'The Prophet ﷺ said:',

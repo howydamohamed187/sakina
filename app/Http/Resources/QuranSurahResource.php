@@ -16,6 +16,8 @@ class QuranSurahResource extends JsonResource
             'number' => $this->id,
             'name' => $this->displayName(),
             'name_ar' => $this->name_ar,
+            'name_en' => $this->name_en,
+            'name_en_translation' => $this->name_en_translation,
             'ayahs_count' => $this->ayahs_count,
             'ayahs_count_label' => trans_choice('api.quran.ayahs_count', $this->ayahs_count, ['count' => $this->ayahs_count]),
             'revelation_type' => [

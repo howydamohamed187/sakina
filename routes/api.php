@@ -12,8 +12,10 @@ use App\Http\Controllers\Api\HadithController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\MosqueController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PrayerTimesController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\QuranController;
+use App\Http\Controllers\Api\QuranReciterController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\TasbeehController;
 use Illuminate\Support\Facades\Route;
@@ -103,14 +105,23 @@ Route::prefix('v1')->group(function () {
         Route::get('tasbeehs/{dhikr}', [TasbeehController::class, 'show']);
         Route::post('tasbeehs/{dhikr}/progress', [TasbeehController::class, 'progress'])->middleware('throttle:60,1');
 
+        Route::get('prayer-times', [PrayerTimesController::class, 'index']);
+
         Route::prefix('quran')->group(function () {
             Route::get('/', [QuranController::class, 'index']);
+            Route::get('search', [QuranController::class, 'search'])->middleware('throttle:60,1');
             Route::get('surahs', [QuranController::class, 'surahs']);
             Route::get('surahs/{surah}', [QuranController::class, 'surah']);
             Route::get('surahs/{surah}/ayahs', [QuranController::class, 'ayahs']);
+            Route::get('surahs/{surah}/ayahs/{ayah}', [QuranController::class, 'ayah'])->whereNumber('ayah');
+            Route::get('ayahs/{ayah}', [QuranController::class, 'ayahByIndex']);
             Route::get('ayahs/{ayah}/tafsir', [QuranController::class, 'tafsir']);
-            Route::get('reciters', [QuranController::class, 'reciters']);
-            Route::get('reciters/{reciter}/surahs/{surah}/audio', [QuranController::class, 'audio']);
+
+            Route::get('reciters', [QuranReciterController::class, 'index']);
+            Route::get('reciters/{reciter}', [QuranReciterController::class, 'show']);
+            Route::get('reciters/{reciter}/surahs/{surah}', [QuranReciterController::class, 'surahAudio']);
+            Route::get('reciters/{reciter}/surahs/{surah}/audio', [QuranReciterController::class, 'audio']);
+            Route::get('reciters/{reciter}/surahs/{surah}/ayahs/{ayah}', [QuranReciterController::class, 'ayahAudio'])->whereNumber('ayah');
         });
 
         Route::get('mosques/nearby', [MosqueController::class, 'nearby'])->middleware('throttle:60,1');

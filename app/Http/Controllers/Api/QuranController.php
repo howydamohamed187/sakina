@@ -9,13 +9,17 @@ use App\Models\QuranAyah;
 use App\Models\QuranReciter;
 use App\Models\QuranSurah;
 use App\Services\Quran\QuranService;
+use App\Services\Quran\ReciterService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class QuranController extends ApiController
 {
-    public function __construct(private readonly QuranService $quran) {}
+    public function __construct(
+        private readonly QuranService $quran,
+        private readonly ReciterService $reciters,
+    ) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -46,7 +50,7 @@ class QuranController extends ApiController
     public function surah(Request $request, QuranSurah $surah): JsonResponse
     {
         $reciter = $this->reciter($request);
-        $ayahs = $this->quran->ayahs($surah, $this->search($request));
+        $ayahs = $this->quran->ayahs($surah, $this->searchTerm($request));
 
         return $this->success([
             ...(new QuranSurahResource($surah))->resolve(),
@@ -71,12 +75,28 @@ class QuranController extends ApiController
 
     public function ayahs(Request $request, QuranSurah $surah): JsonResponse
     {
-        $ayahs = $this->quran->ayahs($surah, $this->search($request));
+        $ayahs = $this->quran->ayahs($surah, $this->searchTerm($request));
 
         return $this->success(
             $this->ayahList($ayahs, $this->reciter($request)),
             __('api.quran.ayahs_ready')
         );
+    }
+
+    public function ayah(QuranSurah $surah, int $ayah): JsonResponse
+    {
+        $model = $this->quran->ayah($surah, $ayah);
+
+        if (! $model) {
+            return $this->error(__('api.quran.ayah_not_found'), [], 404);
+        }
+
+        return $this->ayahDetails($model, $surah);
+    }
+
+    public function ayahByIndex(QuranAyah $ayah): JsonResponse
+    {
+        return $this->ayahDetails($ayah, QuranSurah::query()->findOrFail($ayah->sura));
     }
 
     public function tafsir(QuranAyah $ayah): JsonResponse
@@ -97,32 +117,44 @@ class QuranController extends ApiController
         ], __('api.quran.tafsir_ready'));
     }
 
-    public function reciters(): JsonResponse
+    public function search(Request $request): JsonResponse
     {
-        return $this->success(
-            QuranReciterResource::collection($this->quran->reciters())->resolve(),
-            __('api.quran.reciters_ready')
-        );
-    }
+        $data = $request->validate([
+            'q' => ['required', 'string', 'max:100'],
+            'limit' => ['nullable', 'integer', 'min:1', 'max:100'],
+        ]);
 
-    public function audio(QuranReciter $reciter, QuranSurah $surah): JsonResponse
-    {
-        if ($reciter->status !== 'active') {
-            return $this->error(__('api.not_found'), [], 404);
-        }
+        $limit = (int) ($data['limit'] ?? QuranService::SEARCH_LIMIT);
+        $result = $this->quran->search($data['q'], $limit);
+        $surahs = $this->quran->surahs()->keyBy('id');
 
-        $ayahs = $this->quran->ayahs($surah);
+        $ayahs = collect($this->ayahList($result['ayahs'], null, withTafsir: false))
+            ->map(fn (array $ayah): array => $ayah + [
+                'surah' => [
+                    'id' => $ayah['surah_id'],
+                    'name' => $surahs[$ayah['surah_id']]->displayName(),
+                    'name_ar' => $surahs[$ayah['surah_id']]->name_ar,
+                    'name_en' => $surahs[$ayah['surah_id']]->name_en,
+                ],
+            ])
+            ->all();
 
         return $this->success([
-            'reciter_id' => $reciter->id,
-            'surah_id' => $surah->id,
-            'audio_url' => $reciter->surahAudioUrl($surah->id),
-            'ayahs' => $ayahs->map(fn (QuranAyah $ayah): array => [
-                'id' => $ayah->index,
-                'verse_key' => $ayah->verseKey(),
-                'audio_url' => $reciter->ayahAudioUrl($ayah->sura, $ayah->aya),
-            ])->all(),
-        ], __('api.quran.audio_ready'));
+            'query' => $data['q'],
+            'surahs' => $this->surahList($result['surahs']),
+            'ayahs' => $ayahs,
+            'ayahs_total' => $result['total'],
+            'limit' => $limit,
+        ], __('api.quran.search_ready'));
+    }
+
+    private function ayahDetails(QuranAyah $ayah, QuranSurah $surah): JsonResponse
+    {
+        return $this->success([
+            ...$this->ayahList(collect([$ayah]), null)[0],
+            'tafsir_source' => $this->quran->tafsir($ayah)?->source,
+            'surah' => (new QuranSurahResource($surah))->resolve(),
+        ], __('api.quran.ayah_ready'));
     }
 
     /**
@@ -136,16 +168,18 @@ class QuranController extends ApiController
     /**
      * @param  Collection<int, QuranAyah>  $ayahs
      */
-    private function ayahList(Collection $ayahs, ?QuranReciter $reciter): array
+    private function ayahList(Collection $ayahs, ?QuranReciter $reciter, bool $withTafsir = true): array
     {
-        $translations = $this->quran->translations($ayahs);
-        $tafsirs = $this->quran->tafsirKeys($ayahs);
+        $translations = $this->quran->translations($ayahs, sync: $withTafsir);
+        $english = $this->quran->englishTranslations($ayahs, sync: $withTafsir);
+        $tafsirs = $withTafsir ? $this->quran->tafsirs($ayahs) : [];
 
         return $ayahs->map(fn (QuranAyah $ayah): array => (new QuranAyahResource(
             $ayah,
             $reciter,
             $translations[$ayah->verseKey()] ?? null,
-            isset($tafsirs[$ayah->verseKey()]),
+            $english[$ayah->verseKey()] ?? null,
+            $tafsirs[$ayah->verseKey()] ?? null,
         ))->resolve())->all();
     }
 
@@ -153,10 +187,10 @@ class QuranController extends ApiController
     {
         $id = $request->header('X-Reciter-Id') ?? $request->query('reciter_id');
 
-        return $this->quran->reciter(is_numeric($id) ? (int) $id : null);
+        return $this->reciters->reciter(is_numeric($id) ? (int) $id : null);
     }
 
-    private function search(Request $request): ?string
+    private function searchTerm(Request $request): ?string
     {
         $search = $request->query('search', $request->query('q'));
 
