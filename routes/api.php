@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\DailyQuestionController;
 use App\Http\Controllers\Api\DailyQuizController;
 use App\Http\Controllers\Api\DhikrController;
 use App\Http\Controllers\Api\DuaController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\HadithController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\MosqueController;
@@ -105,19 +106,17 @@ Route::prefix('v1')->group(function () {
             Route::get('statistics', [DailyQuizController::class, 'statistics']);
         });
 
+        Route::post('favorites/toggle', [FavoriteController::class, 'toggle'])->middleware('throttle:60,1');
+
         Route::get('hadiths', [HadithController::class, 'index']);
         Route::get('hadiths/{hadith}', [HadithController::class, 'show']);
-        Route::post('hadiths/{hadith}/favorite/toggle', [HadithController::class, 'toggleFavorite']);
 
+        Route::get('adhkar-categories', [DhikrController::class, 'categories']);
         Route::get('adhkar', [DhikrController::class, 'index']);
         Route::get('adhkar/{dhikr}', [DhikrController::class, 'show']);
-        Route::post('adhkar/{dhikr}/favorite', [DhikrController::class, 'favorite']);
-        Route::delete('adhkar/{dhikr}/favorite', [DhikrController::class, 'unfavorite']);
 
         Route::get('duas', [DuaController::class, 'index']);
         Route::get('duas/{dua}', [DuaController::class, 'show']);
-        Route::post('duas/{dua}/favorite', [DuaController::class, 'favorite']);
-        Route::delete('duas/{dua}/favorite', [DuaController::class, 'unfavorite']);
 
         Route::get('tasbeehs', [TasbeehController::class, 'index']);
         Route::get('tasbeehs/{dhikr}', [TasbeehController::class, 'show']);

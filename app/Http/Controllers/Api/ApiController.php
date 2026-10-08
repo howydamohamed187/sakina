@@ -26,11 +26,11 @@ abstract class ApiController extends Controller
     }
 
     /**
-     * @param  array<int, mixed>  $items
+     * @param  array<array-key, mixed>  $data
      */
-    protected function paginatedWithMeta(array $items, LengthAwarePaginator $paginator, ?string $message = null): JsonResponse
+    protected function paginatedWithMeta(array $data, LengthAwarePaginator $paginator, ?string $message = null): JsonResponse
     {
-        return ApiResponse::json(200, $message ?? __('api.success'), $items, [], [
+        return ApiResponse::json(200, $message ?? __('api.success'), $data, [], [
             'current_page' => $paginator->currentPage(),
             'last_page' => $paginator->lastPage(),
             'per_page' => $paginator->perPage(),

@@ -78,42 +78,6 @@ class DuaController extends ApiController
         );
     }
 
-    public function favorite(Request $request, Dua $dua): JsonResponse
-    {
-        $customer = $this->customer($request);
-
-        if (! $customer instanceof Customer) {
-            return $customer;
-        }
-
-        if (! $dua->isActive()) {
-            return $this->error(__('api.not_found'), [], 404);
-        }
-
-        $customer->favoriteDuas()->syncWithoutDetaching([$dua->id]);
-
-        return $this->success(
-            (new DuaResource($dua->fresh(), $customer))->resolve(),
-            __('api.dua_favorited')
-        );
-    }
-
-    public function unfavorite(Request $request, Dua $dua): JsonResponse
-    {
-        $customer = $this->customer($request);
-
-        if (! $customer instanceof Customer) {
-            return $customer;
-        }
-
-        $customer->favoriteDuas()->detach($dua->id);
-
-        return $this->success(
-            (new DuaResource($dua->fresh(), $customer))->resolve(),
-            __('api.dua_unfavorited')
-        );
-    }
-
     private function customer(Request $request): Customer|JsonResponse
     {
         $user = $request->user();

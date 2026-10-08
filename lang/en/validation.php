@@ -197,6 +197,8 @@ return [
         'total_count' => 'total count',
         'amount' => 'amount',
         'answer_id' => 'answer',
+        'type' => 'type',
+        'category_id' => 'category',
         'token' => 'device token',
         'platform' => 'device platform',
         'notification_status' => 'notification status',

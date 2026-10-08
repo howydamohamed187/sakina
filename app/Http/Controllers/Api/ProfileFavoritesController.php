@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\DhikrResource;
-use App\Http\Resources\DuaResource;
-use App\Http\Resources\HadithResource;
 use App\Models\Customer;
+use App\Support\CustomerFavorites;
+use App\Support\FavoriteTypes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -16,8 +15,6 @@ use Illuminate\Validation\Rule;
  */
 class ProfileFavoritesController extends ApiController
 {
-    public const TYPES = ['hadith', 'dhikr', 'dua'];
-
     public function index(Request $request): JsonResponse
     {
         $customer = $request->user();
@@ -26,22 +23,22 @@ class ProfileFavoritesController extends ApiController
             return $this->error(__('api.not_found'), [], 403);
         }
 
-        $type = $request->validate([
-            'type' => ['nullable', 'string', Rule::in(self::TYPES)],
-        ])['type'] ?? null;
+        $type = FavoriteTypes::normalize($request->validate([
+            'type' => ['nullable', 'string', Rule::in(FavoriteTypes::accepted())],
+        ])['type'] ?? null);
 
         $data = [];
 
-        if ($type === null || $type === 'hadith') {
-            $data['hadiths'] = $this->hadiths($customer);
+        if ($type === null || $type === FavoriteTypes::HADITH) {
+            $data['hadiths'] = CustomerFavorites::hadiths($customer);
         }
 
-        if ($type === null || $type === 'dhikr') {
-            $data['adhkar'] = $this->adhkar($customer);
+        if ($type === null || $type === FavoriteTypes::DHIKR) {
+            $data['adhkar'] = CustomerFavorites::adhkar($customer);
         }
 
-        if ($type === null || $type === 'dua') {
-            $data['duas'] = $this->duas($customer);
+        if ($type === null || $type === FavoriteTypes::DUA) {
+            $data['duas'] = CustomerFavorites::duas($customer);
         }
 
         $counts = [
@@ -54,41 +51,5 @@ class ProfileFavoritesController extends ApiController
             ...$data,
             'counts' => [...$counts, 'total' => array_sum($counts)],
         ], __('api.favorites_ready'));
-    }
-
-    private function hadiths(Customer $customer): array
-    {
-        return $customer->favoriteHadiths()
-            ->active()
-            ->withFavoriteFor($customer)
-            ->withCount('favorites')
-            ->orderByPivot('created_at', 'desc')
-            ->get()
-            ->map(fn ($hadith): array => (new HadithResource($hadith, $customer))->resolve())
-            ->all();
-    }
-
-    private function adhkar(Customer $customer): array
-    {
-        return $customer->favoriteDhikrs()
-            ->active()
-            ->with(['favorites' => fn ($query) => $query->where('customer_id', $customer->id)])
-            ->withCount('favorites')
-            ->orderByPivot('created_at', 'desc')
-            ->get()
-            ->map(fn ($dhikr): array => (new DhikrResource($dhikr, $customer))->resolve())
-            ->all();
-    }
-
-    private function duas(Customer $customer): array
-    {
-        return $customer->favoriteDuas()
-            ->active()
-            ->with(['favorites' => fn ($query) => $query->where('customer_id', $customer->id)])
-            ->withCount('favorites')
-            ->orderByPivot('created_at', 'desc')
-            ->get()
-            ->map(fn ($dua): array => (new DuaResource($dua, $customer))->resolve())
-            ->all();
     }
 }

@@ -14,6 +14,7 @@ class DhikrResource extends JsonResource
     public function __construct(
         $resource,
         private readonly ?Customer $customer = null,
+        private readonly bool $detailed = false,
     ) {
         parent::__construct($resource);
     }
@@ -22,12 +23,20 @@ class DhikrResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->title,
             'title' => $this->title,
+            'text' => $this->body,
             'body' => $this->body,
-            'description' => $this->description,
-            'category' => $this->category,
+            'category' => [
+                'id' => $this->category,
+                'name' => DhikrCategories::label($this->category),
+            ],
             'category_label' => DhikrCategories::label($this->category),
-            'is_favorite' => $this->isFavoritedBy($this->customer) ? 1 : 0,
+            'repeat_count' => $this->target_count ?? 1,
+            'is_countable' => (bool) $this->is_countable,
+            'target_count' => $this->target_count,
+            ...($this->detailed ? ['description' => $this->description] : []),
+            'is_favorite' => $this->isFavoritedBy($this->customer),
             'favorites_count' => $this->favoritesCount(),
         ];
     }

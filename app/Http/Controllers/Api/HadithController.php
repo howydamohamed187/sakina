@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\HadithResource;
 use App\Models\Customer;
 use App\Models\Hadith;
+use App\Support\CustomerFavorites;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -32,9 +33,12 @@ class HadithController extends ApiController
             ->withQueryString();
 
         return $this->paginatedWithMeta(
-            $paginator->getCollection()
-                ->map(fn (Hadith $hadith): array => (new HadithResource($hadith, $customer))->resolve())
-                ->all(),
+            [
+                'favorites' => CustomerFavorites::hadiths($customer),
+                'hadiths' => $paginator->getCollection()
+                    ->map(fn (Hadith $hadith): array => (new HadithResource($hadith, $customer))->resolve())
+                    ->all(),
+            ],
             $paginator,
             __('api.hadiths_ready'),
         );
@@ -57,37 +61,6 @@ class HadithController extends ApiController
         return $this->success(
             (new HadithResource($hadith, $customer, detailed: true))->resolve(),
             __('api.success')
-        );
-    }
-
-    /**
-     * Saves the hadith if it is not in the customer's favorites, removes it otherwise.
-     * Removing works even after the hadith was deactivated.
-     */
-    public function toggleFavorite(Request $request, Hadith $hadith): JsonResponse
-    {
-        $customer = $this->customer($request);
-
-        if (! $customer instanceof Customer) {
-            return $customer;
-        }
-
-        if ($hadith->favorites()->where('customer_id', $customer->id)->delete() > 0) {
-            return $this->success(
-                ['hadith_id' => $hadith->id, 'is_favorite' => false],
-                __('api.hadith_unfavorited')
-            );
-        }
-
-        if (! $hadith->isActive()) {
-            return $this->error(__('api.not_found'), [], 404);
-        }
-
-        $hadith->favorites()->createOrFirst(['customer_id' => $customer->id]);
-
-        return $this->success(
-            ['hadith_id' => $hadith->id, 'is_favorite' => true],
-            __('api.hadith_favorited')
         );
     }
 

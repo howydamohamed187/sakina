@@ -197,6 +197,8 @@ return [
         'total_count' => 'إجمالي عدد التسبيحات',
         'amount' => 'المبلغ',
         'answer_id' => 'الإجابة',
+        'type' => 'النوع',
+        'category_id' => 'التصنيف',
         'token' => 'رمز الجهاز',
         'platform' => 'نظام الجهاز',
         'notification_status' => 'حالة الإشعارات',

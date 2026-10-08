@@ -56,6 +56,7 @@ return [
     'hadith_unfavorited' => 'فەرموودەکە لە دڵخواز لابرا.',
     'favorites_ready' => 'دڵخوازەکان هێنران.',
     'adhkar_ready' => 'ذکرەکان هێنران.',
+    'adhkar_categories_ready' => 'پۆلەکانی ذکر هێنران.',
     'tasbeehs_ready' => 'ذکرەکانی تەزبیح هێنران.',
     'tasbeeh_progress_saved' => 'پێشکەوتنی تەزبیح پاشەکەوت کرا.',
     'dhikr_favorited' => 'ذکرەکە زیادکرا بۆ دڵخواز.',

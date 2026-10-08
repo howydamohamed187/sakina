@@ -197,6 +197,8 @@ return [
         'total_count' => 'کۆی ژمارەی تەسبیحەکان',
         'amount' => 'بڕ',
         'answer_id' => 'وەڵام',
+        'type' => 'جۆر',
+        'category_id' => 'پۆل',
         'token' => 'کۆدی ئامێر',
         'platform' => 'سیستەمی ئامێر',
         'notification_status' => 'دۆخی ئاگادارکردنەوەکان',
