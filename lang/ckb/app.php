@@ -312,6 +312,7 @@ return [
         'sort_order' => 'ڕیزبەندی',
         'dua_title' => 'ناوی دوعا',
         'dua_body' => 'دەقی دوعا',
+        'dua_description' => 'وەسف / تێبینی',
         'dua_category' => 'پۆل',
         'created_at' => 'بەرواری دروستکردن',
         'deleted_at' => 'بەرواری سڕینەوە',

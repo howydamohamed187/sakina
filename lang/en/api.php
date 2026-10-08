@@ -62,6 +62,7 @@ return [
     'dhikr_favorited' => 'The dhikr was added to favorites.',
     'dhikr_unfavorited' => 'The dhikr was removed from favorites.',
     'duas_ready' => 'Duas loaded.',
+    'dua_categories_ready' => 'Dua categories loaded.',
     'dua_favorited' => 'The dua was added to favorites.',
     'dua_unfavorited' => 'The dua was removed from favorites.',
     'home_ready' => 'Home data retrieved successfully',

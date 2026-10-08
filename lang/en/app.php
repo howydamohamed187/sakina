@@ -312,6 +312,7 @@ return [
         'sort_order' => 'Sort order',
         'dua_title' => 'Dua title',
         'dua_body' => 'Dua text',
+        'dua_description' => 'Description / notes',
         'dua_category' => 'Category',
         'created_at' => 'Created at',
         'deleted_at' => 'Deleted at',

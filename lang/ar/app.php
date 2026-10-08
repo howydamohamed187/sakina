@@ -312,6 +312,7 @@ return [
         'sort_order' => 'الترتيب',
         'dua_title' => 'مسمى الدعاء',
         'dua_body' => 'نص الدعاء',
+        'dua_description' => 'الوصف / ملاحظات',
         'dua_category' => 'التصنيف',
         'created_at' => 'تاريخ الإنشاء',
         'deleted_at' => 'تاريخ الحذف',

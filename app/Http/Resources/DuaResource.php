@@ -14,6 +14,7 @@ class DuaResource extends JsonResource
     public function __construct(
         $resource,
         private readonly ?Customer $customer = null,
+        private readonly bool $detailed = false,
     ) {
         parent::__construct($resource);
     }
@@ -22,11 +23,17 @@ class DuaResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->title,
             'title' => $this->title,
+            'dua_text' => $this->body,
             'body' => $this->body,
-            'category' => $this->category,
+            'category' => [
+                'id' => $this->category,
+                'name' => DuaCategories::label($this->category),
+            ],
             'category_label' => DuaCategories::label($this->category),
-            'is_favorite' => $this->isFavoritedBy($this->customer) ? 1 : 0,
+            ...($this->detailed ? ['description' => $this->description] : []),
+            'is_favorite' => $this->isFavoritedBy($this->customer),
             'favorites_count' => $this->favoritesCount(),
         ];
     }

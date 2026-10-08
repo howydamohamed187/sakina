@@ -75,6 +75,10 @@ class DuaResource extends Resource
                         ->required()
                         ->rows(6)
                         ->columnSpanFull(),
+                    Textarea::make('description')
+                        ->label(__('app.fields.dua_description'))
+                        ->rows(3)
+                        ->columnSpanFull(),
                     Select::make('category')
                         ->label(__('app.fields.dua_category'))
                         ->options(DuaCategories::options())
@@ -95,6 +99,10 @@ class DuaResource extends Resource
                             ->label(__('app.fields.dua_title')),
                         TextEntry::make('body')
                             ->label(__('app.fields.dua_body'))
+                            ->columnSpanFull(),
+                        TextEntry::make('description')
+                            ->label(__('app.fields.dua_description'))
+                            ->placeholder('—')
                             ->columnSpanFull(),
                         TextEntry::make('category')
                             ->label(__('app.fields.dua_category'))

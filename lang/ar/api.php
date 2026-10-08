@@ -62,6 +62,7 @@ return [
     'dhikr_favorited' => 'تمت إضافة الذكر إلى المفضلة.',
     'dhikr_unfavorited' => 'تمت إزالة الذكر من المفضلة.',
     'duas_ready' => 'تم جلب الأدعية.',
+    'dua_categories_ready' => 'تم جلب تصنيفات الأدعية.',
     'dua_favorited' => 'تمت إضافة الدعاء إلى المفضلة.',
     'dua_unfavorited' => 'تمت إزالة الدعاء من المفضلة.',
     'home_ready' => 'تم جلب بيانات الرئيسية بنجاح',

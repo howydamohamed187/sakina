@@ -115,6 +115,7 @@ Route::prefix('v1')->group(function () {
         Route::get('adhkar', [DhikrController::class, 'index']);
         Route::get('adhkar/{dhikr}', [DhikrController::class, 'show']);
 
+        Route::get('dua-categories', [DuaController::class, 'categories']);
         Route::get('duas', [DuaController::class, 'index']);
         Route::get('duas/{dua}', [DuaController::class, 'show']);
 

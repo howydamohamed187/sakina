@@ -19,6 +19,7 @@ class Dua extends Model
     protected $fillable = [
         'title',
         'body',
+        'description',
         'category',
         'status',
         'sort_order',
