@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ContactChannelController;
 use App\Http\Controllers\Api\CustomerAuthController;
 use App\Http\Controllers\Api\CustomerProfileController;
 use App\Http\Controllers\Api\DailyQuestionController;
+use App\Http\Controllers\Api\DailyQuizController;
 use App\Http\Controllers\Api\DhikrController;
 use App\Http\Controllers\Api\DuaController;
 use App\Http\Controllers\Api\HadithController;
@@ -86,6 +87,12 @@ Route::prefix('v1')->group(function () {
 
         Route::get('daily-question', [DailyQuestionController::class, 'show']);
         Route::post('daily-question/answer', [DailyQuestionController::class, 'answer']);
+
+        Route::prefix('daily-quiz')->group(function () {
+            Route::get('today', [DailyQuizController::class, 'today']);
+            Route::post('today/answer', [DailyQuizController::class, 'answer'])->middleware('throttle:30,1');
+            Route::get('statistics', [DailyQuizController::class, 'statistics']);
+        });
 
         Route::get('hadiths', [HadithController::class, 'index']);
         Route::get('hadiths/{hadith}', [HadithController::class, 'show']);

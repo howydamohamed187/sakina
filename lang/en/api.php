@@ -42,6 +42,11 @@ return [
     'daily_question_invalid_option' => 'The selected answer does not belong to this question.',
     'daily_question_correct' => 'Correct answer.',
     'daily_question_wrong' => 'Wrong answer.',
+    'daily_quiz' => [
+        'correct' => 'Well done!',
+        'wrong' => 'Something new to learn',
+        'statistics_ready' => 'Daily quiz statistics loaded.',
+    ],
     'hadiths_ready' => 'Hadiths loaded.',
     'hadith_favorited' => 'The hadith was added to favorites.',
     'hadith_unfavorited' => 'The hadith was removed from favorites.',

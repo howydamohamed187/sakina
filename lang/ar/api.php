@@ -42,6 +42,11 @@ return [
     'daily_question_invalid_option' => 'الإجابة المختارة غير صحيحة لهذا السؤال.',
     'daily_question_correct' => 'إجابة صحيحة.',
     'daily_question_wrong' => 'إجابة خاطئة.',
+    'daily_quiz' => [
+        'correct' => 'أحسنت الإجابة',
+        'wrong' => 'معلومة جديدة',
+        'statistics_ready' => 'تم تحميل إحصائيات الاختبار اليومي.',
+    ],
     'hadiths_ready' => 'تم جلب الأحاديث.',
     'hadith_favorited' => 'تمت إضافة الحديث إلى المفضلة.',
     'hadith_unfavorited' => 'تمت إزالة الحديث من المفضلة.',

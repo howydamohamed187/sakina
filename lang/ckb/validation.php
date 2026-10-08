@@ -196,6 +196,7 @@ return [
         'current_count' => 'ژمارەی ئێستا',
         'total_count' => 'کۆی ژمارەی تەسبیحەکان',
         'amount' => 'بڕ',
+        'answer_id' => 'وەڵام',
         'currency' => 'دراو',
         'country' => 'وڵات',
         'name' => 'ناو',

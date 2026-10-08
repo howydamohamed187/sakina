@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\DailyQuestion;
 use App\Models\DailyQuestionAnswer;
 use App\Models\DailyQuestionAssignment;
+use App\Services\DailyQuestionService;
 use App\Support\QuestionCategories;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,9 +26,7 @@ class DailyQuestionResource extends JsonResource
     {
         $answered = $this->answer !== null;
 
-        $answers = $this->options
-            ->shuffle()
-            ->values()
+        $answers = DailyQuestionService::shuffledOptions($this->resource, $this->assignment)
             ->map(fn ($option): array => [
                 'id' => $option->id,
                 'body' => $option->body,

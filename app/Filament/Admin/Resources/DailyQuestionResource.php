@@ -13,6 +13,7 @@ use App\Support\QuestionCategories;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -72,6 +73,11 @@ class DailyQuestionResource extends Resource
                         ->required()
                         ->rows(3)
                         ->columnSpanFull(),
+                    Textarea::make('explanation')
+                        ->label(__('app.fields.question_explanation'))
+                        ->rows(3)
+                        ->maxLength(2000)
+                        ->columnSpanFull(),
                     Select::make('category')
                         ->label(__('app.fields.category'))
                         ->options(QuestionCategories::options())
@@ -111,7 +117,11 @@ class DailyQuestionResource extends Resource
                                 }
                             },
                         ]),
-                        AdminForm::statusToggle(),
+                    TextInput::make('sort_order')
+                        ->label(__('app.fields.sort_order'))
+                        ->integer()
+                        ->minValue(0),
+                    AdminForm::statusToggle(),
                 ], 2),
             ]);
     }
@@ -122,6 +132,13 @@ class DailyQuestionResource extends Resource
             ->schema([
                 InfoSection::make(__('app.admin_form.daily_question_answers'))
                     ->schema([
+                        TextEntry::make('body')
+                            ->label(__('app.fields.question'))
+                            ->columnSpanFull(),
+                        TextEntry::make('explanation')
+                            ->label(__('app.fields.question_explanation'))
+                            ->placeholder('—')
+                            ->columnSpanFull(),
                         RepeatableEntry::make('options')
                             ->label(__('app.fields.answers'))
                             ->schema([
@@ -142,6 +159,15 @@ class DailyQuestionResource extends Resource
                         TextEntry::make('category')
                             ->label(__('app.fields.category'))
                             ->formatStateUsing(fn (?string $state): string => QuestionCategories::label($state)),
+                        TextEntry::make('participations')
+                            ->label(__('app.fields.participations'))
+                            ->state(fn (DailyQuestion $record): int => $record->participationsCount()),
+                        TextEntry::make('correct_answers')
+                            ->label(__('app.fields.correct_answers'))
+                            ->state(fn (DailyQuestion $record): int => $record->correctAnswersCount()),
+                        TextEntry::make('wrong_answers')
+                            ->label(__('app.fields.wrong_answers'))
+                            ->state(fn (DailyQuestion $record): int => $record->wrongAnswersCount()),
                         TextEntry::make('created_at')
                             ->label(__('app.fields.created_at'))
                             ->dateTime(),
@@ -156,6 +182,7 @@ class DailyQuestionResource extends Resource
             ->modifyQueryUsing(fn (Builder $query): Builder => $query
                 ->with('options')
                 ->withCount([
+                    'options',
                     'assignments',
                     'answers',
                     'answers as correct_answers_count' => fn (Builder $query): Builder => $query->where('is_correct', true),
@@ -163,11 +190,17 @@ class DailyQuestionResource extends Resource
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->columns([
+                TextColumn::make('id')
+                    ->label('#')
+                    ->sortable(),
                 TextColumn::make('body')
                     ->label(__('app.fields.question'))
                     ->searchable()
                     ->limit(40)
                     ->wrap(),
+                TextColumn::make('options_count')
+                    ->label(__('app.fields.answers_count'))
+                    ->sortable(),
                 TextColumn::make('correct_answer')
                     ->label(__('app.fields.correct_answer'))
                     ->limit(30),
@@ -175,8 +208,11 @@ class DailyQuestionResource extends Resource
                     ->label(__('app.fields.participations'))
                     ->sortable(),
                 TextColumn::make('correct_answers_count')
-                    ->label(__('app.fields.correct_answers_short'))
+                    ->label(__('app.fields.correct_answers'))
                     ->sortable(),
+                TextColumn::make('wrong_answers')
+                    ->label(__('app.fields.wrong_answers'))
+                    ->state(fn (DailyQuestion $record): int => $record->wrongAnswersCount()),
                 TextColumn::make('success_rate')
                     ->label(__('app.fields.success_rate'))
                     ->state(fn (DailyQuestion $record): string => $record->successRateLabel()),
@@ -191,8 +227,7 @@ class DailyQuestionResource extends Resource
                 TextColumn::make('created_at')
                     ->label(__('app.fields.created_at'))
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
                 static::trashFilter(),
@@ -236,5 +271,4 @@ class DailyQuestionResource extends Resource
             'edit' => Pages\EditDailyQuestion::route('/{record}/edit'),
         ];
     }
-
 }

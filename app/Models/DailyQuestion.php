@@ -18,6 +18,7 @@ class DailyQuestion extends Model
 
     protected $fillable = [
         'body',
+        'explanation',
         'category',
         'status',
         'sort_order',

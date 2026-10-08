@@ -42,6 +42,11 @@ return [
     'daily_question_invalid_option' => 'وەڵامی هەڵبژێردراو بۆ ئەم پرسیارە دروست نییە.',
     'daily_question_correct' => 'وەڵامەکە دروستە.',
     'daily_question_wrong' => 'وەڵامەکە هەڵەیە.',
+    'daily_quiz' => [
+        'correct' => 'دەستخۆش، وەڵامەکەت ڕاستە',
+        'wrong' => 'زانیارییەکی نوێ',
+        'statistics_ready' => 'ئامارەکانی تاقیکردنەوەی ڕۆژانە بارکران.',
+    ],
     'hadiths_ready' => 'فەرموودەکان هێنران.',
     'hadith_favorited' => 'فەرموودەکە زیادکرا بۆ دڵخواز.',
     'hadith_unfavorited' => 'فەرموودەکە لە دڵخواز لابرا.',

@@ -196,6 +196,7 @@ return [
         'current_count' => 'العدد الحالي',
         'total_count' => 'إجمالي عدد التسبيحات',
         'amount' => 'المبلغ',
+        'answer_id' => 'الإجابة',
         'currency' => 'العملة',
         'country' => 'الدولة',
         'name' => 'الاسم',

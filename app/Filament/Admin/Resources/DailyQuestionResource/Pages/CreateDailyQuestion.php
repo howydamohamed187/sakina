@@ -21,7 +21,9 @@ class CreateDailyQuestion extends CreateRecord
      */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['sort_order'] = (int) DailyQuestion::query()->max('sort_order') + 1;
+        if (blank($data['sort_order'] ?? null)) {
+            $data['sort_order'] = (int) DailyQuestion::query()->max('sort_order') + 1;
+        }
 
         return $data;
     }

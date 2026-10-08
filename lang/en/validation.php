@@ -196,6 +196,7 @@ return [
         'current_count' => 'current count',
         'total_count' => 'total count',
         'amount' => 'amount',
+        'answer_id' => 'answer',
         'currency' => 'currency',
         'country' => 'country',
         'name' => 'name',
