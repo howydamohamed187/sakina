@@ -31,6 +31,7 @@ class Customer extends Authenticatable
         'latitude',
         'longitude',
         'locale',
+        'notifications_enabled',
         'status',
         'email_verified_at',
         'sort_order',
@@ -48,6 +49,7 @@ class Customer extends Authenticatable
             'password' => 'hashed',
             'latitude' => 'float',
             'longitude' => 'float',
+            'notifications_enabled' => 'boolean',
             'sort_order' => 'integer',
         ];
     }
@@ -100,6 +102,11 @@ class Customer extends Authenticatable
             ->withTimestamps();
     }
 
+    public function deviceTokens(): HasMany
+    {
+        return $this->hasMany(CustomerDeviceToken::class);
+    }
+
     public function isActive(): bool
     {
         return $this->status === 'active';
@@ -143,6 +150,7 @@ class Customer extends Authenticatable
 
         static::forceDeleting(function (Customer $customer): void {
             $customer->tokens()->delete();
+            $customer->deviceTokens()->delete();
             $customer->notifications()->delete();
             $customer->hadithFavorites()->delete();
             $customer->dhikrFavorites()->delete();

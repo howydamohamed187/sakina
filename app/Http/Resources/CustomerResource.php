@@ -24,6 +24,7 @@ class CustomerResource extends JsonResource
             'longitude' => $this->longitude,
             'locale' => $this->locale,
             'preferred_language' => $this->locale,
+            'notification_status' => $this->notifications_enabled === false ? 0 : 1,
             'status' => $this->status,
             'status_label' => __('app.statuses.'.$this->status),
             'email_verified' => $verified ? 1 : 0,

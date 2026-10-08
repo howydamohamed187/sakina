@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactChannelController;
 use App\Http\Controllers\Api\CustomerAuthController;
 use App\Http\Controllers\Api\CustomerProfileController;
+use App\Http\Controllers\Api\CustomerSettingsController;
 use App\Http\Controllers\Api\DailyQuestionController;
 use App\Http\Controllers\Api\DailyQuizController;
 use App\Http\Controllers\Api\DhikrController;
@@ -75,6 +76,14 @@ Route::prefix('v1')->group(function () {
         Route::prefix('admin/auth')->group(function () {
             Route::get('me', [AuthController::class, 'me']);
             Route::post('logout', [AuthController::class, 'logout']);
+        });
+
+        Route::prefix('profile')->group(function () {
+            Route::post('device-token', [CustomerSettingsController::class, 'updateDeviceToken'])->middleware('throttle:30,1');
+            Route::get('settings', [CustomerSettingsController::class, 'settings']);
+            Route::post('settings', [CustomerSettingsController::class, 'updateSettings']);
+            Route::put('settings', [CustomerSettingsController::class, 'updateSettings']);
+            Route::post('logout', [CustomerSettingsController::class, 'logout']);
         });
 
         Route::get('profile', [ProfileController::class, 'show']);
