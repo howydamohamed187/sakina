@@ -64,6 +64,16 @@ return [
     'duas_ready' => 'Duas loaded.',
     'dua_categories_ready' => 'Dua categories loaded.',
     'ruqyah_ready' => 'Ruqyah loaded.',
+    'prayer_notifications' => [
+        'ready' => 'Prayer notification settings loaded.',
+        'updated' => 'Prayer notification settings saved.',
+        'empty' => 'Send settings for at least one prayer.',
+        'fields' => [
+            'enabled' => 'notification',
+            'sound_enabled' => 'sound',
+            'vibration_enabled' => 'vibration',
+        ],
+    ],
     'occasion_reminders' => [
         'list_ready' => 'Reminders loaded.',
         'ready' => 'Reminder loaded.',

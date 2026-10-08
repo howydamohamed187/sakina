@@ -88,6 +88,8 @@ Route::prefix('v1')->group(function () {
             Route::get('settings', [CustomerSettingsController::class, 'settings']);
             Route::post('settings', [CustomerSettingsController::class, 'updateSettings']);
             Route::put('settings', [CustomerSettingsController::class, 'updateSettings']);
+            Route::get('settings/prayer-notifications', [CustomerSettingsController::class, 'prayerNotifications']);
+            Route::match(['put', 'post'], 'settings/prayer-notifications', [CustomerSettingsController::class, 'updatePrayerNotifications']);
             Route::post('logout', [CustomerSettingsController::class, 'logout']);
             Route::get('favorites', [ProfileFavoritesController::class, 'index']);
         });

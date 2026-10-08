@@ -64,6 +64,16 @@ return [
     'duas_ready' => 'تم جلب الأدعية.',
     'dua_categories_ready' => 'تم جلب تصنيفات الأدعية.',
     'ruqyah_ready' => 'تم جلب الرقية الشرعية.',
+    'prayer_notifications' => [
+        'ready' => 'تم جلب إعدادات تنبيهات الصلاة.',
+        'updated' => 'تم حفظ إعدادات تنبيهات الصلاة.',
+        'empty' => 'أرسل إعدادات صلاة واحدة على الأقل.',
+        'fields' => [
+            'enabled' => 'التنبيه',
+            'sound_enabled' => 'الصوت',
+            'vibration_enabled' => 'الاهتزاز',
+        ],
+    ],
     'occasion_reminders' => [
         'list_ready' => 'تم جلب التذكيرات.',
         'ready' => 'تم جلب التذكير.',

@@ -64,6 +64,16 @@ return [
     'duas_ready' => 'دوعاکان هێنران.',
     'dua_categories_ready' => 'پۆلەکانی دوعا هێنران.',
     'ruqyah_ready' => 'ڕوقیەی شەرعی هێنرا.',
+    'prayer_notifications' => [
+        'ready' => 'ڕێکخستنەکانی ئاگادارکردنەوەی نوێژ هێنران.',
+        'updated' => 'ڕێکخستنەکانی ئاگادارکردنەوەی نوێژ پاشەکەوت کران.',
+        'empty' => 'لانیکەم ڕێکخستنی یەک نوێژ بنێرە.',
+        'fields' => [
+            'enabled' => 'ئاگادارکردنەوە',
+            'sound_enabled' => 'دەنگ',
+            'vibration_enabled' => 'لەرینەوە',
+        ],
+    ],
     'occasion_reminders' => [
         'list_ready' => 'بیرخەرەوەکان هێنران.',
         'ready' => 'بیرخەرەوەکە هێنرا.',

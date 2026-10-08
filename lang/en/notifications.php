@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'prayer_time' => [
+        'title' => 'Time for :prayer',
+        'body' => 'It is now time for :prayer (:time).',
+    ],
+    'sunrise_time' => [
+        'title' => 'Sunrise',
+        'body' => 'It is sunrise time (:time).',
+    ],
     'occasion_reminder' => [
         'title' => 'Occasion reminder',
         'body' => 'Today is the anniversary of ":title".',

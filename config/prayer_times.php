@@ -56,4 +56,26 @@ return [
 
     'cache_ttl' => (int) env('PRAYER_CACHE_TTL', 60 * 60 * 48),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Prayer Notifications
+    |--------------------------------------------------------------------------
+    |
+    | Defaults apply to prayers the customer has not configured yet. A prayer
+    | is pushed when its time falls within the last "window_minutes" minutes.
+    |
+    */
+
+    'notifications' => [
+        'defaults' => [
+            'fajr' => ['enabled' => true, 'sound_enabled' => true, 'vibration_enabled' => true],
+            'sunrise' => ['enabled' => false, 'sound_enabled' => false, 'vibration_enabled' => false],
+            'dhuhr' => ['enabled' => true, 'sound_enabled' => true, 'vibration_enabled' => true],
+            'asr' => ['enabled' => true, 'sound_enabled' => true, 'vibration_enabled' => true],
+            'maghrib' => ['enabled' => true, 'sound_enabled' => true, 'vibration_enabled' => true],
+            'isha' => ['enabled' => true, 'sound_enabled' => true, 'vibration_enabled' => true],
+        ],
+        'window_minutes' => (int) env('PRAYER_NOTIFICATION_WINDOW', 5),
+    ],
+
 ];

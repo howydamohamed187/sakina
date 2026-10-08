@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'prayer_time' => [
+        'title' => 'کاتی :prayer',
+        'body' => 'ئێستا کاتی :prayer هاتووە (:time).',
+    ],
+    'sunrise_time' => [
+        'title' => 'کاتی خۆرهەڵاتن',
+        'body' => 'کاتی خۆرهەڵاتن هات (:time).',
+    ],
     'occasion_reminder' => [
         'title' => 'بیرخەرەوەی بۆنە',
         'body' => 'ئەمڕۆ یادی ":title"یە.',

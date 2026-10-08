@@ -117,6 +117,11 @@ class Customer extends Authenticatable
         return $this->hasMany(OccasionReminder::class);
     }
 
+    public function prayerNotificationSettings(): HasMany
+    {
+        return $this->hasMany(CustomerPrayerNotificationSetting::class);
+    }
+
     public function isActive(): bool
     {
         return $this->status === 'active';
@@ -169,6 +174,7 @@ class Customer extends Authenticatable
             $customer->aiConversations()->delete();
             OccasionReminderNotification::query()->whereIn('occasion_reminder_id', $customer->occasionReminders()->select('id'))->delete();
             $customer->occasionReminders()->delete();
+            $customer->prayerNotificationSettings()->delete();
             $customer->roles()->detach();
 
             if ($customer->avatar) {

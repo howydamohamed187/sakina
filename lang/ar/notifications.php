@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'prayer_time' => [
+        'title' => 'حان وقت :prayer',
+        'body' => 'حان الآن موعد :prayer (:time).',
+    ],
+    'sunrise_time' => [
+        'title' => 'وقت الشروق',
+        'body' => 'حان وقت الشروق (:time).',
+    ],
     'occasion_reminder' => [
         'title' => 'تذكير مناسبة',
         'body' => 'اليوم ذكرى ":title".',

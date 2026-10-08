@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\UpdateCustomerSettingsRequest;
 use App\Http\Requests\Api\UpdateDeviceTokenRequest;
+use App\Http\Requests\Api\UpdatePrayerNotificationSettingsRequest;
 use App\Models\Customer;
 use App\Models\CustomerDeviceToken;
+use App\Services\PrayerNotificationPreferences;
+use App\Services\PrayerTimesService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -72,6 +75,31 @@ class CustomerSettingsController extends ApiController
         }
 
         return $this->success($this->payload($customer->fresh()), __('api.customer_settings_updated'));
+    }
+
+    public function prayerNotifications(Request $request, PrayerNotificationPreferences $preferences): JsonResponse
+    {
+        $customer = $request->user();
+
+        if (! $customer instanceof Customer) {
+            return $this->error(__('api.not_found'), [], 403);
+        }
+
+        return $this->success($preferences->for($customer), __('api.prayer_notifications.ready'));
+    }
+
+    public function updatePrayerNotifications(UpdatePrayerNotificationSettingsRequest $request, PrayerNotificationPreferences $preferences): JsonResponse
+    {
+        $customer = $request->user();
+
+        if (! $customer instanceof Customer) {
+            return $this->error(__('api.not_found'), [], 403);
+        }
+
+        return $this->success(
+            $preferences->update($customer, $request->safe()->only(PrayerTimesService::TIMES)),
+            __('api.prayer_notifications.updated'),
+        );
     }
 
     /**
