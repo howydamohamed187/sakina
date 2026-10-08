@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'occasion_reminder' => [
+        'title' => 'تذكير مناسبة',
+        'body' => 'اليوم ذكرى ":title".',
+    ],
+    'occasion_reminder_with_dua' => [
+        'title' => 'تذكير مناسبة',
+        'body' => 'اليوم ذكرى ":title" — يمكنك قراءة :dua.',
+    ],
     'welcome' => [
         'title' => 'مرحباً بك في سكينة',
         'body' => 'تم تفعيل حسابك بنجاح. يمكنك الآن إدارة النظام من لوحة التحكم.',

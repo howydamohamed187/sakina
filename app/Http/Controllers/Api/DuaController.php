@@ -21,6 +21,19 @@ class DuaController extends ApiController
             return $customer;
         }
 
+        if ($request->boolean('simple')) {
+            return $this->success(
+                Dua::query()
+                    ->active()
+                    ->orderBy('sort_order')
+                    ->orderBy('id')
+                    ->get(['id', 'title'])
+                    ->map(fn (Dua $dua): array => ['id' => $dua->id, 'name' => $dua->title])
+                    ->all(),
+                __('api.duas_ready'),
+            );
+        }
+
         if ($request->filled('category') && ! $request->filled('category_id')) {
             $request->merge(['category_id' => $request->query('category')]);
         }

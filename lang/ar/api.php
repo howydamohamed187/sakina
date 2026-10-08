@@ -64,6 +64,14 @@ return [
     'duas_ready' => 'تم جلب الأدعية.',
     'dua_categories_ready' => 'تم جلب تصنيفات الأدعية.',
     'ruqyah_ready' => 'تم جلب الرقية الشرعية.',
+    'occasion_reminders' => [
+        'list_ready' => 'تم جلب التذكيرات.',
+        'ready' => 'تم جلب التذكير.',
+        'created' => 'تمت إضافة التذكير بنجاح.',
+        'updated' => 'تم تعديل التذكير بنجاح.',
+        'deleted' => 'تم حذف المناسبة بنجاح.',
+        'not_found' => 'التذكير غير موجود.',
+    ],
     'assistant' => [
         'conversations_ready' => 'تم جلب المحادثات.',
         'conversation_ready' => 'تم جلب المحادثة.',

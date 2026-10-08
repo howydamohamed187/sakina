@@ -64,6 +64,14 @@ return [
     'duas_ready' => 'Duas loaded.',
     'dua_categories_ready' => 'Dua categories loaded.',
     'ruqyah_ready' => 'Ruqyah loaded.',
+    'occasion_reminders' => [
+        'list_ready' => 'Reminders loaded.',
+        'ready' => 'Reminder loaded.',
+        'created' => 'Reminder added successfully.',
+        'updated' => 'Reminder updated successfully.',
+        'deleted' => 'Occasion deleted successfully.',
+        'not_found' => 'Reminder not found.',
+    ],
     'assistant' => [
         'conversations_ready' => 'Conversations loaded.',
         'conversation_ready' => 'Conversation loaded.',

@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'occasion_reminder' => [
+        'title' => 'Occasion reminder',
+        'body' => 'Today is the anniversary of ":title".',
+    ],
+    'occasion_reminder_with_dua' => [
+        'title' => 'Occasion reminder',
+        'body' => 'Today is the anniversary of ":title" — you can read :dua.',
+    ],
     'welcome' => [
         'title' => 'Welcome to Sakina',
         'body' => 'Your account is ready. You can now manage the system from the control panel.',

@@ -112,6 +112,11 @@ class Customer extends Authenticatable
         return $this->hasMany(AiConversation::class);
     }
 
+    public function occasionReminders(): HasMany
+    {
+        return $this->hasMany(OccasionReminder::class);
+    }
+
     public function isActive(): bool
     {
         return $this->status === 'active';
@@ -162,6 +167,8 @@ class Customer extends Authenticatable
             $customer->duaFavorites()->delete();
             AiMessage::query()->whereIn('ai_conversation_id', $customer->aiConversations()->select('id'))->delete();
             $customer->aiConversations()->delete();
+            OccasionReminderNotification::query()->whereIn('occasion_reminder_id', $customer->occasionReminders()->select('id'))->delete();
+            $customer->occasionReminders()->delete();
             $customer->roles()->detach();
 
             if ($customer->avatar) {

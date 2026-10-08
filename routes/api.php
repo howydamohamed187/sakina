@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\HadithController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\MosqueController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\OccasionReminderController;
 use App\Http\Controllers\Api\PrayerTimesController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ProfileFavoritesController;
@@ -118,6 +119,12 @@ Route::prefix('v1')->group(function () {
         Route::get('adhkar/{dhikr}', [DhikrController::class, 'show']);
 
         Route::get('ruqyah', [RuqyahController::class, 'index']);
+
+        Route::get('occasion-reminders', [OccasionReminderController::class, 'index']);
+        Route::post('occasion-reminders', [OccasionReminderController::class, 'store'])->middleware('throttle:30,1');
+        Route::get('occasion-reminders/{reminder}', [OccasionReminderController::class, 'show'])->whereNumber('reminder');
+        Route::match(['put', 'patch'], 'occasion-reminders/{reminder}', [OccasionReminderController::class, 'update'])->whereNumber('reminder');
+        Route::delete('occasion-reminders/{reminder}', [OccasionReminderController::class, 'destroy'])->whereNumber('reminder');
 
         Route::prefix('assistant')->group(function () {
             Route::get('conversations', [AssistantController::class, 'conversations']);
