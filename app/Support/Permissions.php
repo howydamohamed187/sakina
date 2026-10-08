@@ -52,6 +52,8 @@ class Permissions
 
     public const RESOURCE_DUAS = 'duas';
 
+    public const RESOURCE_RUQYAH = 'ruqyah';
+
     public const RESOURCE_QURAN = 'quran';
 
     public const RESOURCE_QURAN_RECITERS = 'quran_reciters';
@@ -70,6 +72,7 @@ class Permissions
         self::RESOURCE_HADITHS,
         self::RESOURCE_ADHKAR,
         self::RESOURCE_DUAS,
+        self::RESOURCE_RUQYAH,
         self::RESOURCE_QURAN,
         self::RESOURCE_QURAN_RECITERS,
     ];
@@ -83,6 +86,7 @@ class Permissions
         self::RESOURCE_HADITHS,
         self::RESOURCE_ADHKAR,
         self::RESOURCE_DUAS,
+        self::RESOURCE_RUQYAH,
     ];
 
     public static function name(string $resource, string $action): string

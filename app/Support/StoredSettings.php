@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Settings\AppearanceSettings;
 use App\Settings\DeveloperSettings;
 use App\Settings\GeneralSettings;
+use App\Settings\RuqyahSettings;
 use App\Settings\ThirdPartySettings;
 use App\Settings\ZakatSettings;
 use Illuminate\Support\Facades\Schema;
@@ -35,6 +36,11 @@ class StoredSettings
     public static function zakat(): ?ZakatSettings
     {
         return self::safe(ZakatSettings::class);
+    }
+
+    public static function ruqyah(): ?RuqyahSettings
+    {
+        return self::safe(RuqyahSettings::class);
     }
 
     public static function appName(?string $locale = null): string

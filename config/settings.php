@@ -3,6 +3,7 @@
 use App\Settings\AppearanceSettings;
 use App\Settings\DeveloperSettings;
 use App\Settings\GeneralSettings;
+use App\Settings\RuqyahSettings;
 use App\Settings\ThirdPartySettings;
 use App\Settings\ZakatSettings;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeInterfaceCast;
@@ -22,6 +23,7 @@ return [
         AppearanceSettings::class,
         DeveloperSettings::class,
         ZakatSettings::class,
+        RuqyahSettings::class,
     ],
 
     /*

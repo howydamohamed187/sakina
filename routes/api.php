@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ProfileFavoritesController;
 use App\Http\Controllers\Api\QuranController;
 use App\Http\Controllers\Api\QuranReciterController;
+use App\Http\Controllers\Api\RuqyahController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\TasbeehController;
 use App\Http\Controllers\Api\ZakatController;
@@ -114,6 +115,8 @@ Route::prefix('v1')->group(function () {
         Route::get('adhkar-categories', [DhikrController::class, 'categories']);
         Route::get('adhkar', [DhikrController::class, 'index']);
         Route::get('adhkar/{dhikr}', [DhikrController::class, 'show']);
+
+        Route::get('ruqyah', [RuqyahController::class, 'index']);
 
         Route::get('dua-categories', [DuaController::class, 'categories']);
         Route::get('duas', [DuaController::class, 'index']);

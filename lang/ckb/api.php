@@ -63,6 +63,8 @@ return [
     'dhikr_unfavorited' => 'ذکرەکە لە دڵخواز لابرا.',
     'duas_ready' => 'دوعاکان هێنران.',
     'dua_categories_ready' => 'پۆلەکانی دوعا هێنران.',
+    'ruqyah_ready' => 'ڕوقیەی شەرعی هێنرا.',
+    'ruqyah_step_number' => 'هەنگاوی :number',
     'dua_favorited' => 'دوعاکە زیادکرا بۆ دڵخواز.',
     'dua_unfavorited' => 'دوعاکە لە دڵخواز لابرا.',
     'home_ready' => 'زانیارییەکانی سەرەکی بە سەرکەوتوویی هێنران',

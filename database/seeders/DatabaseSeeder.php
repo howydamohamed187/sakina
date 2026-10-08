@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             AdhkarSeeder::class,
             DuasSeeder::class,
             QuranSeeder::class,
+            RuqyahStepsSeeder::class,
             ZakatSettingsSeeder::class,
         ]);
     }
