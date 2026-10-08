@@ -13,6 +13,36 @@ class UpdateCustomerSettingsRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $language = $this->input('preferred_language');
+
+        if (! is_string($language)) {
+            return;
+        }
+
+        $language = mb_strtolower(trim($language));
+
+        $aliases = [
+            'ku' => 'ckb',
+            'kur' => 'ckb',
+            'ckb' => 'ckb',
+            'ku_iq' => 'ckb',
+            'ku-iq' => 'ckb',
+            'ckb_iq' => 'ckb',
+            'ckb-iq' => 'ckb',
+            'kurdish' => 'ckb',
+            'sorani' => 'ckb',
+            'كردي' => 'ckb',
+            'کوردی' => 'ckb',
+            'arabic' => 'ar',
+            'عربي' => 'ar',
+            'english' => 'en',
+        ];
+
+        $this->merge(['preferred_language' => $aliases[$language] ?? $language]);
+    }
+
     /**
      * @return array<string, array<int, mixed>>
      */
