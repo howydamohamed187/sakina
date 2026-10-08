@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\MosqueController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PrayerTimesController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ProfileFavoritesController;
 use App\Http\Controllers\Api\QuranController;
 use App\Http\Controllers\Api\QuranReciterController;
 use App\Http\Controllers\Api\SettingsController;
@@ -84,6 +85,7 @@ Route::prefix('v1')->group(function () {
             Route::post('settings', [CustomerSettingsController::class, 'updateSettings']);
             Route::put('settings', [CustomerSettingsController::class, 'updateSettings']);
             Route::post('logout', [CustomerSettingsController::class, 'logout']);
+            Route::get('favorites', [ProfileFavoritesController::class, 'index']);
         });
 
         Route::get('profile', [ProfileController::class, 'show']);
@@ -105,8 +107,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('hadiths', [HadithController::class, 'index']);
         Route::get('hadiths/{hadith}', [HadithController::class, 'show']);
-        Route::post('hadiths/{hadith}/favorite', [HadithController::class, 'favorite']);
-        Route::delete('hadiths/{hadith}/favorite', [HadithController::class, 'unfavorite']);
+        Route::post('hadiths/{hadith}/favorite/toggle', [HadithController::class, 'toggleFavorite']);
 
         Route::get('adhkar', [DhikrController::class, 'index']);
         Route::get('adhkar/{dhikr}', [DhikrController::class, 'show']);

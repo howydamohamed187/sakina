@@ -15,6 +15,8 @@ class HadithFactory extends Factory
         return [
             'title' => 'حديث عن الأعمال',
             'body' => 'إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى.',
+            'narrator' => 'عمر بن الخطاب رضي الله عنه',
+            'source' => 'صحيح البخاري',
             'status' => 'active',
             'sort_order' => 0,
         ];

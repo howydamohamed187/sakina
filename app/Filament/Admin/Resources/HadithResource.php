@@ -72,8 +72,18 @@ class HadithResource extends Resource
                         ->required()
                         ->rows(6)
                         ->columnSpanFull(),
+                    TextInput::make('narrator')
+                        ->label(__('app.fields.hadith_narrator'))
+                        ->maxLength(255),
+                    TextInput::make('source')
+                        ->label(__('app.fields.hadith_source'))
+                        ->maxLength(255),
+                    Textarea::make('explanation')
+                        ->label(__('app.fields.hadith_explanation'))
+                        ->rows(4)
+                        ->columnSpanFull(),
                     AdminForm::statusToggle()->columnSpanFull(),
-                ], 1),
+                ], 2),
             ]);
     }
 
@@ -87,6 +97,16 @@ class HadithResource extends Resource
                             ->label(__('app.fields.hadith_title')),
                         TextEntry::make('body')
                             ->label(__('app.fields.hadith_body'))
+                            ->columnSpanFull(),
+                        TextEntry::make('narrator')
+                            ->label(__('app.fields.hadith_narrator'))
+                            ->placeholder('—'),
+                        TextEntry::make('source')
+                            ->label(__('app.fields.hadith_source'))
+                            ->placeholder('—'),
+                        TextEntry::make('explanation')
+                            ->label(__('app.fields.hadith_explanation'))
+                            ->placeholder('—')
                             ->columnSpanFull(),
                         TextEntry::make('favorites_count')
                             ->label(__('app.fields.favorite_count'))
@@ -121,6 +141,11 @@ class HadithResource extends Resource
                     ->label(__('app.fields.hadith_body'))
                     ->searchable()
                     ->limit(40),
+                TextColumn::make('narrator')
+                    ->label(__('app.fields.hadith_narrator'))
+                    ->searchable()
+                    ->limit(30)
+                    ->toggleable(),
                 TextColumn::make('favorites_count')
                     ->label(__('app.fields.favorite_count'))
                     ->sortable(),

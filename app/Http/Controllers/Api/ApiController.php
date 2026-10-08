@@ -24,4 +24,17 @@ abstract class ApiController extends Controller
     {
         return ApiResponse::json(200, __('api.success'), $resource->resolve());
     }
+
+    /**
+     * @param  array<int, mixed>  $items
+     */
+    protected function paginatedWithMeta(array $items, LengthAwarePaginator $paginator, ?string $message = null): JsonResponse
+    {
+        return ApiResponse::json(200, $message ?? __('api.success'), $items, [], [
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+        ]);
+    }
 }

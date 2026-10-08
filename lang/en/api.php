@@ -54,6 +54,7 @@ return [
     'hadiths_ready' => 'Hadiths loaded.',
     'hadith_favorited' => 'The hadith was added to favorites.',
     'hadith_unfavorited' => 'The hadith was removed from favorites.',
+    'favorites_ready' => 'Favorites loaded.',
     'adhkar_ready' => 'Adhkar loaded.',
     'tasbeehs_ready' => 'Tasbeeh adhkar loaded.',
     'tasbeeh_progress_saved' => 'Tasbeeh progress saved.',

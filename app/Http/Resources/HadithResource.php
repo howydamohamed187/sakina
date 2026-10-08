@@ -13,6 +13,7 @@ class HadithResource extends JsonResource
     public function __construct(
         $resource,
         private readonly ?Customer $customer = null,
+        private readonly bool $detailed = false,
     ) {
         parent::__construct($resource);
     }
@@ -22,8 +23,12 @@ class HadithResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'hadith_text' => $this->body,
             'body' => $this->body,
-            'is_favorite' => $this->isFavoritedBy($this->customer) ? 1 : 0,
+            'narrator' => $this->narrator,
+            'source' => $this->source,
+            ...($this->detailed ? ['explanation' => $this->explanation] : []),
+            'is_favorite' => $this->isFavoritedBy($this->customer),
             'favorites_count' => $this->favoritesCount(),
         ];
     }

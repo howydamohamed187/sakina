@@ -18,6 +18,9 @@ class Hadith extends Model
     protected $fillable = [
         'title',
         'body',
+        'narrator',
+        'source',
+        'explanation',
         'status',
         'sort_order',
     ];
@@ -43,6 +46,23 @@ class Hadith extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('status', 'active');
+    }
+
+    public function scopeSearch(Builder $query, string $term): Builder
+    {
+        $pattern = '%'.$term.'%';
+
+        return $query->where(fn (Builder $query) => $query
+            ->where('title', 'like', $pattern)
+            ->orWhere('body', 'like', $pattern));
+    }
+
+    /**
+     * Eager-loads only the given customer's favorite row so isFavoritedBy() needs no extra query.
+     */
+    public function scopeWithFavoriteFor(Builder $query, ?Customer $customer): Builder
+    {
+        return $query->with(['favorites' => fn ($favorites) => $favorites->where('customer_id', $customer?->id ?? 0)]);
     }
 
     public function isActive(): bool
