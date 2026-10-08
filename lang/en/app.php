@@ -195,6 +195,19 @@ return [
         'quran' => 'Quran',
         'quran_reciters' => 'reciters',
     ],
+    'zakat_admin' => [
+        'settings' => 'Zakat calculator settings',
+        'calculation' => 'Calculation standard',
+        'calculation_hint' => 'Nisab = gold weight × today\'s price of one gram at the selected karat. Zakat = amount × percentage ÷ 100 when the amount reaches the nisab.',
+        'grams' => 'g',
+        'fields' => [
+            'calculator_active' => 'Enable zakat calculator',
+            'zakat_percentage' => 'Zakat percentage',
+            'nisab_gold_grams' => 'Gold nisab (grams)',
+            'gold_karat' => 'Gold karat',
+            'default_currency' => 'Default currency',
+        ],
+    ],
     'language' => 'Language',
     'quran_admin' => [
         'surah' => 'Surah',

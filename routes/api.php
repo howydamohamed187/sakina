@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\QuranController;
 use App\Http\Controllers\Api\QuranReciterController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\TasbeehController;
+use App\Http\Controllers\Api\ZakatController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -136,4 +137,10 @@ Route::prefix('v1')->group(function () {
     Route::get('settings', [SettingsController::class, 'show']);
 
     Route::get('contact-channels', [ContactChannelController::class, 'index']);
+
+    Route::prefix('zakat')->middleware('throttle:60,1')->group(function () {
+        Route::get('nisab', [ZakatController::class, 'nisab']);
+        Route::post('calculate', [ZakatController::class, 'calculate']);
+        Route::get('payment-suggestions', [ContactChannelController::class, 'index']);
+    });
 });

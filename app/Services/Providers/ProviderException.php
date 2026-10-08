@@ -6,10 +6,14 @@ use RuntimeException;
 use Throwable;
 
 /**
- * Raised by external content providers (prayer times, Quran translations/tafsir).
+ * Raised by external content providers (prayer times, Quran translations/tafsir, gold prices, exchange rates).
  */
 class ProviderException extends RuntimeException
 {
+    public const SERVICE_GOLD_PRICE = 'gold_price';
+
+    public const SERVICE_EXCHANGE_RATE = 'exchange_rate';
+
     public const TIMEOUT = 'timeout';
 
     public const FAILED = 'failed';
@@ -22,6 +26,7 @@ class ProviderException extends RuntimeException
         public readonly string $reason,
         string $message = '',
         ?Throwable $previous = null,
+        public readonly ?string $service = null,
     ) {
         parent::__construct($message !== '' ? $message : $reason, 0, $previous);
     }

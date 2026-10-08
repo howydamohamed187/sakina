@@ -4,6 +4,7 @@ use App\Settings\AppearanceSettings;
 use App\Settings\DeveloperSettings;
 use App\Settings\GeneralSettings;
 use App\Settings\ThirdPartySettings;
+use App\Settings\ZakatSettings;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeInterfaceCast;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeZoneCast;
 use Spatie\LaravelSettings\SettingsRepositories\DatabaseSettingsRepository;
@@ -20,6 +21,7 @@ return [
         ThirdPartySettings::class,
         AppearanceSettings::class,
         DeveloperSettings::class,
+        ZakatSettings::class,
     ],
 
     /*

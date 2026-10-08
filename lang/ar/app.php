@@ -195,6 +195,19 @@ return [
         'quran' => 'القرآن الكريم',
         'quran_reciters' => 'القراء',
     ],
+    'zakat_admin' => [
+        'settings' => 'إعدادات حاسبة الزكاة',
+        'calculation' => 'معايير الحساب',
+        'calculation_hint' => 'النصاب = وزن الذهب × سعر جرام الذهب للعيار المحدد اليوم. الزكاة = المبلغ × النسبة ÷ 100 إذا بلغ المبلغ النصاب.',
+        'grams' => 'جرام',
+        'fields' => [
+            'calculator_active' => 'تفعيل حاسبة الزكاة',
+            'zakat_percentage' => 'نسبة الزكاة',
+            'nisab_gold_grams' => 'نصاب الذهب بالجرام',
+            'gold_karat' => 'عيار الذهب',
+            'default_currency' => 'العملة الافتراضية',
+        ],
+    ],
     'language' => 'اللغة',
     'quran_admin' => [
         'surah' => 'سورة',

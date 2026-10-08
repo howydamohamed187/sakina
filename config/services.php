@@ -69,6 +69,29 @@ return [
         'timeout' => (int) env('QURAN_TIMEOUT', 15),
     ],
 
+    /*
+    | Gold spot price (24K, per troy ounce, USD). "gold_api": https://gold-api.com,
+    | no key required (an optional key raises the rate limit).
+    */
+    'gold_price' => [
+        'provider' => env('GOLD_PRICE_PROVIDER', 'gold_api'),
+        'url' => env('GOLD_PRICE_API_URL', 'https://api.gold-api.com'),
+        'key' => env('GOLD_PRICE_API_KEY'),
+        'timeout' => (int) env('GOLD_PRICE_TIMEOUT', 10),
+    ],
+
+    /*
+    | Exchange rates. "exchangerate_api": ExchangeRate-API. Without a key the
+    | open-access endpoint (https://open.er-api.com/v6, daily rates) is used; with
+    | a key set EXCHANGE_RATES_API_URL=https://v6.exchangerate-api.com/v6.
+    */
+    'exchange_rates' => [
+        'provider' => env('EXCHANGE_RATES_PROVIDER', 'exchangerate_api'),
+        'url' => env('EXCHANGE_RATES_API_URL', 'https://open.er-api.com/v6'),
+        'key' => env('EXCHANGE_RATES_API_KEY'),
+        'timeout' => (int) env('EXCHANGE_RATES_TIMEOUT', 10),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

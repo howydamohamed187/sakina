@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Filament\Forms\TranslatableFields;
 use App\Notifications\ResetPasswordNotification;
+use App\Services\Currency\Contracts\ExchangeRateProvider;
+use App\Services\Currency\Providers\ExchangeRateApiProvider;
+use App\Services\Gold\Contracts\GoldPriceProvider;
+use App\Services\Gold\Providers\GoldApiProvider;
 use App\Services\Mosques\Contracts\MosqueProvider;
 use App\Services\Mosques\Providers\GooglePlacesProvider;
 use App\Services\Mosques\Providers\OverpassProvider;
@@ -54,6 +58,18 @@ class AppServiceProvider extends ServiceProvider
             (string) config('services.quran.url'),
             config('services.quran.key'),
             (int) config('services.quran.timeout', 15),
+        ));
+
+        $this->app->bind(GoldPriceProvider::class, fn (): GoldPriceProvider => new GoldApiProvider(
+            (string) config('services.gold_price.url'),
+            config('services.gold_price.key'),
+            (int) config('services.gold_price.timeout', 10),
+        ));
+
+        $this->app->bind(ExchangeRateProvider::class, fn (): ExchangeRateProvider => new ExchangeRateApiProvider(
+            (string) config('services.exchange_rates.url'),
+            config('services.exchange_rates.key'),
+            (int) config('services.exchange_rates.timeout', 10),
         ));
 
         $this->app->bind(

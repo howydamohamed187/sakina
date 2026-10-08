@@ -195,6 +195,9 @@ return [
     'attributes' => [
         'current_count' => 'current count',
         'total_count' => 'total count',
+        'amount' => 'amount',
+        'currency' => 'currency',
+        'country' => 'country',
         'name' => 'name',
         'first_name' => 'first name',
         'last_name' => 'last name',

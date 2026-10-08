@@ -195,6 +195,19 @@ return [
         'quran' => 'قورئانی پیرۆز',
         'quran_reciters' => 'قورئانخوێنەکان',
     ],
+    'zakat_admin' => [
+        'settings' => 'ڕێکخستنەکانی ژمێرەری زەکات',
+        'calculation' => 'پێوەری ژماردن',
+        'calculation_hint' => 'نیساب = کێشی زێڕ × نرخی ئەمڕۆی یەک گرام بەو عەیارەی دیاریکراوە. زەکات = بڕ × ڕێژە ÷ 100 ئەگەر بڕەکە گەیشتە نیساب.',
+        'grams' => 'گرام',
+        'fields' => [
+            'calculator_active' => 'چالاککردنی ژمێرەری زەکات',
+            'zakat_percentage' => 'ڕێژەی زەکات',
+            'nisab_gold_grams' => 'نیسابی زێڕ (گرام)',
+            'gold_karat' => 'عەیاری زێڕ',
+            'default_currency' => 'دراوی بنەڕەت',
+        ],
+    ],
     'language' => 'زمان',
     'quran_admin' => [
         'surah' => 'سورەت',

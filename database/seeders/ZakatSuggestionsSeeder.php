@@ -7,36 +7,44 @@ use App\Models\ContactType;
 use App\Support\ContactTypes;
 use Illuminate\Database\Seeder;
 
+/**
+ * Zakat suggestions shown under "مقترحات للسداد" in the zakat calculator.
+ * Values marked as placeholders must be replaced with verified details from the admin panel.
+ */
 class ZakatSuggestionsSeeder extends Seeder
 {
     public function run(): void
     {
         $suggestions = [
-            ContactTypes::HOTLINE => [
-                'name' => 'الخط الساخن للزكاة',
-                'value' => '+2025777477',
+            [
+                'name' => 'جمعية رسالة',
+                'kind' => ContactTypes::LINK,
+                'value' => 'https://resala.org',
             ],
-            ContactTypes::PHONE => [
-                'name' => 'هاتف صندوق الزكاة',
-                'value' => '+201012345678',
+            [
+                'name' => 'جمعية عطاء',
+                'kind' => ContactTypes::LINK,
+                'value' => 'https://zakat.sakina.test/ataa', // placeholder
             ],
-            ContactTypes::ACCOUNT => [
+            [
                 'name' => 'حساب الزكاة الرسمي',
-                'value' => '1234567890123',
+                'kind' => ContactTypes::ACCOUNT,
+                'value' => '1234567890123', // placeholder
             ],
-            ContactTypes::LINK => [
-                'name' => 'بوابة دفع الزكاة',
-                'value' => 'https://zakat.sakina.test',
+            [
+                'name' => 'الخط الساخن للزكاة',
+                'kind' => ContactTypes::HOTLINE,
+                'value' => '+2025777477', // placeholder
             ],
         ];
 
-        foreach ($suggestions as $kind => $row) {
+        foreach ($suggestions as $index => $row) {
             $type = ContactType::query()->firstOrCreate(
-                ['kind' => $kind],
+                ['kind' => $row['kind']],
                 [
-                    'name' => ContactTypes::label($kind),
+                    'name' => ContactTypes::label($row['kind']),
                     'status' => 'active',
-                    'sort_order' => array_search($kind, ContactTypes::all(), true) + 1,
+                    'sort_order' => array_search($row['kind'], ContactTypes::all(), true) + 1,
                 ],
             );
 
@@ -44,10 +52,10 @@ class ZakatSuggestionsSeeder extends Seeder
                 ['name' => $row['name']],
                 [
                     'contact_type_id' => $type->id,
-                    'type' => $kind,
+                    'type' => $row['kind'],
                     'value' => $row['value'],
                     'status' => 'active',
-                    'sort_order' => $type->sort_order,
+                    'sort_order' => $index + 1,
                 ],
             );
         }

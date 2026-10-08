@@ -6,6 +6,7 @@ use App\Settings\AppearanceSettings;
 use App\Settings\DeveloperSettings;
 use App\Settings\GeneralSettings;
 use App\Settings\ThirdPartySettings;
+use App\Settings\ZakatSettings;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
 
@@ -29,6 +30,11 @@ class StoredSettings
     public static function thirdParty(): ?ThirdPartySettings
     {
         return self::safe(ThirdPartySettings::class);
+    }
+
+    public static function zakat(): ?ZakatSettings
+    {
+        return self::safe(ZakatSettings::class);
     }
 
     public static function appName(?string $locale = null): string

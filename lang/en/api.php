@@ -56,6 +56,22 @@ return [
     'home_ready' => 'Home data retrieved successfully',
     'home_layout_ready' => 'Home layout retrieved successfully',
     'prayer_times_ready' => 'Prayer times loaded.',
+    'zakat' => [
+        'nisab_ready' => 'Today\'s nisab calculated.',
+        'due' => 'Your wealth reaches the nisab, so zakat is due.',
+        'not_due' => 'Your wealth is below the nisab, so no zakat is due.',
+        'disabled' => 'The zakat calculator is currently unavailable.',
+        'errors' => [
+            'gold_price' => 'The gold price is unavailable right now, please try again later.',
+            'exchange_rate' => 'The exchange rate is unavailable right now, please try again later.',
+        ],
+        'currency_symbols' => [
+            'IQD' => 'IQD', 'USD' => '$', 'EUR' => '€', 'GBP' => '£', 'EGP' => 'EGP',
+            'SAR' => 'SAR', 'AED' => 'AED', 'KWD' => 'KWD', 'QAR' => 'QAR', 'BHD' => 'BHD',
+            'OMR' => 'OMR', 'JOD' => 'JOD', 'LBP' => 'LBP', 'SYP' => 'SYP', 'ILS' => '₪',
+            'YER' => 'YER', 'TRY' => '₺',
+        ],
+    ],
     'provider_errors' => [
         'timeout' => 'The external service did not respond in time, please try again.',
         'failed' => 'The external service is currently unavailable, please try later.',
