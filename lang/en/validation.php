@@ -198,6 +198,7 @@ return [
         'amount' => 'amount',
         'answer_id' => 'answer',
         'type' => 'type',
+        'message' => 'message',
         'category_id' => 'category',
         'token' => 'device token',
         'platform' => 'device platform',

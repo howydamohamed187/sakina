@@ -92,6 +92,22 @@ return [
         'timeout' => (int) env('EXCHANGE_RATES_TIMEOUT', 10),
     ],
 
+    /*
+    | Smart Assistant AI provider. "openai" speaks the OpenAI Chat Completions API,
+    | so any compatible provider works by changing AI_BASE_URL / AI_MODEL
+    | (OpenAI, OpenRouter, Groq, DeepSeek, Gemini's OpenAI-compatible endpoint...).
+    | The key is server-side only and never returned to the app.
+    */
+    'ai' => [
+        'provider' => env('AI_PROVIDER', 'openai'),
+        'url' => env('AI_BASE_URL', 'https://api.openai.com/v1'),
+        'key' => env('AI_API_KEY'),
+        'model' => env('AI_MODEL', 'gpt-4o-mini'),
+        'timeout' => (int) env('AI_TIMEOUT', 30),
+        'max_tokens' => (int) env('AI_MAX_TOKENS', 1000),
+        'temperature' => (float) env('AI_TEMPERATURE', 0.3),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

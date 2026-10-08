@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use App\Filament\Forms\TranslatableFields;
+use App\Http\ApiResponse;
 use App\Notifications\ResetPasswordNotification;
+use App\Services\Assistant\Contracts\AiChatProvider;
+use App\Services\Assistant\Providers\OpenAiCompatibleProvider;
 use App\Services\Currency\Contracts\ExchangeRateProvider;
 use App\Services\Currency\Providers\ExchangeRateApiProvider;
 use App\Services\Gold\Contracts\GoldPriceProvider;
@@ -21,6 +24,9 @@ use App\Support\StoredSettings;
 use Filament\Forms\Components\Section;
 use Filament\Http\Controllers\Auth\LogoutController;
 use Filament\Notifications\Auth\ResetPassword;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -72,6 +78,15 @@ class AppServiceProvider extends ServiceProvider
             (int) config('services.exchange_rates.timeout', 10),
         ));
 
+        $this->app->bind(AiChatProvider::class, fn (): AiChatProvider => new OpenAiCompatibleProvider(
+            (string) config('services.ai.url'),
+            config('services.ai.key'),
+            (string) config('services.ai.model'),
+            (int) config('services.ai.timeout', 30),
+            (int) config('services.ai.max_tokens', 1000),
+            (float) config('services.ai.temperature', 0.3),
+        ));
+
         $this->app->bind(
             ResetPassword::class,
             fn ($app, array $params) => new ResetPasswordNotification($params['token'] ?? '')
@@ -85,6 +100,11 @@ class AppServiceProvider extends ServiceProvider
         if (Locales::isSupported((string) $locale)) {
             app()->setLocale($locale);
         }
+
+        RateLimiter::for('assistant', fn (Request $request): Limit => Limit::perMinute(max(1, (int) config('assistant.rate_limit_per_minute', 10)))
+            ->by('assistant:'.($request->user()?->getAuthIdentifier() ?? $request->ip()))
+            ->response(fn (Request $request, array $headers) => ApiResponse::json(429, __('api.assistant.errors.too_many_messages'), null)
+                ->withHeaders($headers)));
 
         if (StoredSettings::debugMode()) {
             config(['app.debug' => true]);

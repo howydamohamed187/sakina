@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AppConfigController;
+use App\Http\Controllers\Api\AssistantController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactChannelController;
 use App\Http\Controllers\Api\CustomerAuthController;
@@ -117,6 +118,17 @@ Route::prefix('v1')->group(function () {
         Route::get('adhkar/{dhikr}', [DhikrController::class, 'show']);
 
         Route::get('ruqyah', [RuqyahController::class, 'index']);
+
+        Route::prefix('assistant')->group(function () {
+            Route::get('conversations', [AssistantController::class, 'conversations']);
+            Route::post('conversations/open', [AssistantController::class, 'open'])->middleware('throttle:30,1');
+            Route::get('conversations/{conversation}', [AssistantController::class, 'show'])->whereNumber('conversation');
+            Route::post('conversations/{conversation}/messages', [AssistantController::class, 'send'])
+                ->whereNumber('conversation')
+                ->middleware('throttle:assistant');
+            Route::post('conversations/{conversation}/close', [AssistantController::class, 'close'])->whereNumber('conversation');
+            Route::delete('conversations/{conversation}', [AssistantController::class, 'destroy'])->whereNumber('conversation');
+        });
 
         Route::get('dua-categories', [DuaController::class, 'categories']);
         Route::get('duas', [DuaController::class, 'index']);

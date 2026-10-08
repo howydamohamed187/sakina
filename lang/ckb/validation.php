@@ -198,6 +198,7 @@ return [
         'amount' => 'بڕ',
         'answer_id' => 'وەڵام',
         'type' => 'جۆر',
+        'message' => 'نامە',
         'category_id' => 'پۆل',
         'token' => 'کۆدی ئامێر',
         'platform' => 'سیستەمی ئامێر',

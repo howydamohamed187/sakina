@@ -198,6 +198,7 @@ return [
         'amount' => 'المبلغ',
         'answer_id' => 'الإجابة',
         'type' => 'النوع',
+        'message' => 'الرسالة',
         'category_id' => 'التصنيف',
         'token' => 'رمز الجهاز',
         'platform' => 'نظام الجهاز',

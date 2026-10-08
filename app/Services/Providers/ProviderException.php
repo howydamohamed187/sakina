@@ -6,13 +6,15 @@ use RuntimeException;
 use Throwable;
 
 /**
- * Raised by external content providers (prayer times, Quran translations/tafsir, gold prices, exchange rates).
+ * Raised by external providers (prayer times, Quran translations/tafsir, gold prices, exchange rates, AI).
  */
 class ProviderException extends RuntimeException
 {
     public const SERVICE_GOLD_PRICE = 'gold_price';
 
     public const SERVICE_EXCHANGE_RATE = 'exchange_rate';
+
+    public const SERVICE_AI = 'ai';
 
     public const TIMEOUT = 'timeout';
 
@@ -21,6 +23,8 @@ class ProviderException extends RuntimeException
     public const INVALID_RESPONSE = 'invalid_response';
 
     public const NOT_CONFIGURED = 'not_configured';
+
+    public const RATE_LIMITED = 'rate_limited';
 
     public function __construct(
         public readonly string $reason,
@@ -36,6 +40,7 @@ class ProviderException extends RuntimeException
         return match ($this->reason) {
             self::TIMEOUT => 504,
             self::NOT_CONFIGURED => 503,
+            self::RATE_LIMITED => 429,
             default => 502,
         };
     }

@@ -107,6 +107,11 @@ class Customer extends Authenticatable
         return $this->hasMany(CustomerDeviceToken::class);
     }
 
+    public function aiConversations(): HasMany
+    {
+        return $this->hasMany(AiConversation::class);
+    }
+
     public function isActive(): bool
     {
         return $this->status === 'active';
@@ -155,6 +160,8 @@ class Customer extends Authenticatable
             $customer->hadithFavorites()->delete();
             $customer->dhikrFavorites()->delete();
             $customer->duaFavorites()->delete();
+            AiMessage::query()->whereIn('ai_conversation_id', $customer->aiConversations()->select('id'))->delete();
+            $customer->aiConversations()->delete();
             $customer->roles()->detach();
 
             if ($customer->avatar) {
