@@ -1,7 +1,11 @@
 <?php
 
 return [
-    'prayer_time' => [
+    'prayer_approaching' => [
+        'title' => ':prayer is approaching',
+        'body' => ':minutes minutes left until :prayer (:time).',
+    ],
+    'adhan' => [
         'title' => 'Time for :prayer',
         'body' => 'It is now time for :prayer (:time).',
     ],

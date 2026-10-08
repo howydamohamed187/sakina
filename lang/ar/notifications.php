@@ -1,7 +1,11 @@
 <?php
 
 return [
-    'prayer_time' => [
+    'prayer_approaching' => [
+        'title' => 'اقترب موعد :prayer',
+        'body' => 'باقي :minutes دقيقة على :prayer (:time).',
+    ],
+    'adhan' => [
         'title' => 'حان وقت :prayer',
         'body' => 'حان الآن موعد :prayer (:time).',
     ],

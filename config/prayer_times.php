@@ -63,6 +63,8 @@ return [
     |
     | Defaults apply to prayers the customer has not configured yet. A prayer
     | is pushed when its time falls within the last "window_minutes" minutes.
+    | "before_minutes" sends the approaching alert that many minutes earlier
+    | (0 disables it).
     |
     */
 
@@ -76,6 +78,7 @@ return [
             'isha' => ['enabled' => true, 'sound_enabled' => true, 'vibration_enabled' => true],
         ],
         'window_minutes' => (int) env('PRAYER_NOTIFICATION_WINDOW', 5),
+        'before_minutes' => (int) env('PRAYER_NOTIFICATION_BEFORE', 15),
     ],
 
 ];

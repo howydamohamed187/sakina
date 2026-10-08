@@ -172,6 +172,11 @@ Route::prefix('v1')->group(function () {
         Route::post('notifications/read-all', [NotificationController::class, 'markAllRead']);
         Route::post('notifications/{id}/read', [NotificationController::class, 'markRead']);
 
+        Route::get('users/notifications', [NotificationController::class, 'all']);
+        Route::post('users/notifications/read', [NotificationController::class, 'markAsRead']);
+        Route::delete('users/notifications/{id?}', [NotificationController::class, 'destroy']);
+        Route::post('users/notifications/fcm', [NotificationController::class, 'fcm'])->middleware('throttle:10,1');
+
         Route::put('settings', [SettingsController::class, 'update']);
     });
 

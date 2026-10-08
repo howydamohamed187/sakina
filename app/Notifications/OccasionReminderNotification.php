@@ -3,62 +3,49 @@
 namespace App\Notifications;
 
 use App\Models\OccasionReminder;
-use App\Notifications\Channels\FirebaseChannel;
 use Carbon\CarbonInterface;
 
 /**
- * Yearly occasion reminder: stored in the customer's in-app notifications (database)
- * and pushed through FCM to the customer's devices.
+ * Yearly occasion reminder, with the linked dua (if any) so Flutter can open it.
  */
-class OccasionReminderNotification extends LocalizedNotification
+class OccasionReminderNotification extends CustomerPushNotification
 {
+    /** @var array<string, string> */
+    private array $titles;
+
+    /** @var array<string, string> */
+    private array $bodies;
+
     public function __construct(
         public OccasionReminder $reminder,
         public CarbonInterface $occurrence,
     ) {
-        parent::__construct(
+        [$this->titles, $this->bodies] = static::translate(
             $reminder->dua ? 'occasion_reminder_with_dua' : 'occasion_reminder',
             ['title' => $reminder->title, 'dua' => $reminder->dua?->title ?? ''],
         );
     }
 
-    public function via(object $notifiable): array
+    public function key(): string
     {
-        return ['database', FirebaseChannel::class];
+        return 'occasion_reminder';
     }
 
-    public function toArray(object $notifiable): array
+    public function titles(): array
     {
-        return [
-            ...parent::toArray($notifiable),
-            ...$this->payload(),
-        ];
+        return $this->titles;
     }
 
-    /**
-     * @return array{title: string, body: string, data: array<string, string>}
-     */
-    public function toFirebase(object $notifiable): array
+    public function bodies(): array
     {
-        $data = parent::toArray($notifiable);
-
-        return [
-            'title' => $data['title'],
-            'body' => $data['body'],
-            'data' => array_map('strval', array_filter([
-                'key' => $this->key,
-                ...$this->payload(),
-            ], fn ($value): bool => $value !== null)),
-        ];
+        return $this->bodies;
     }
 
-    /**
-     * @return array{reminder_id: int, occurrence_date: string, dua_id: int|null}
-     */
-    private function payload(): array
+    public function viewData(): array
     {
         return [
-            'reminder_id' => $this->reminder->id,
+            'entity_type' => 'occasion_reminder',
+            'entity_id' => $this->reminder->id,
             'occurrence_date' => $this->occurrence->toDateString(),
             'dua_id' => $this->reminder->dua_id,
         ];

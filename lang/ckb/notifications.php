@@ -1,7 +1,11 @@
 <?php
 
 return [
-    'prayer_time' => [
+    'prayer_approaching' => [
+        'title' => 'کاتی :prayer نزیک بووەتەوە',
+        'body' => ':minutes خولەک ماوە بۆ :prayer (:time).',
+    ],
+    'adhan' => [
         'title' => 'کاتی :prayer',
         'body' => 'ئێستا کاتی :prayer هاتووە (:time).',
     ],

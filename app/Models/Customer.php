@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Rules\TripleName;
+use App\Support\Locales;
 use App\Support\Roles;
 use Database\Factories\CustomerFactory;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class Customer extends Authenticatable
+class Customer extends Authenticatable implements HasLocalePreference
 {
     /** @use HasFactory<CustomerFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
@@ -120,6 +122,11 @@ class Customer extends Authenticatable
     public function prayerNotificationSettings(): HasMany
     {
         return $this->hasMany(CustomerPrayerNotificationSetting::class);
+    }
+
+    public function preferredLocale(): string
+    {
+        return is_string($this->locale) && Locales::isSupported($this->locale) ? $this->locale : Locales::default();
     }
 
     public function isActive(): bool
