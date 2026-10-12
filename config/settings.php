@@ -41,6 +41,13 @@ return [
     ],
 
     /*
+     * Developer settings mirror their values into this env file.
+     * Tests opt in with settings.write_env so the real .env stays untouched.
+     */
+    'env_file' => env('SETTINGS_ENV_FILE'),
+    'write_env' => (bool) env('SETTINGS_WRITE_ENV', false),
+
+    /*
      * When no repository was set for a settings class the following repository
      * will be used for loading and saving settings.
      */

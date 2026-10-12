@@ -97,6 +97,7 @@ return [
     | so any compatible provider works by changing AI_BASE_URL / AI_MODEL
     | (OpenAI, OpenRouter, Groq, DeepSeek, Gemini's OpenAI-compatible endpoint...).
     | The key is server-side only and never returned to the app.
+    | Saving developer settings writes these values back to the environment file.
     */
     'ai' => [
         'provider' => env('AI_PROVIDER', 'openai'),
@@ -106,6 +107,10 @@ return [
         'timeout' => (int) env('AI_TIMEOUT', 30),
         'max_tokens' => (int) env('AI_MAX_TOKENS', 1000),
         'temperature' => (float) env('AI_TEMPERATURE', 0.3),
+    ],
+
+    'google_maps' => [
+        'key' => env('GOOGLE_MAP_KEY'),
     ],
 
     'slack' => [

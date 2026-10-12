@@ -271,3 +271,32 @@ body.fi-body {
 .fi-wi-table .fi-ta-ctn {
     height: 100%;
 }
+
+.fi-fo-locked-secret,
+.fi-fo-locked-secret-mask,
+.fi-fo-locked-secret-value {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.fi-fo-locked-secret-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--sakina-muted);
+    pointer-events: none;
+    overflow-wrap: anywhere;
+}
+
+.fi-fo-locked-secret input,
+.fi-fo-locked-secret-input {
+    -webkit-user-select: text;
+    user-select: text;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.fi-fo-locked-secret input::-ms-reveal,
+.fi-fo-locked-secret input::-ms-clear {
+    display: none;
+}

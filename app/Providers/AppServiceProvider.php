@@ -78,14 +78,18 @@ class AppServiceProvider extends ServiceProvider
             (int) config('services.exchange_rates.timeout', 10),
         ));
 
-        $this->app->bind(AiChatProvider::class, fn (): AiChatProvider => new OpenAiCompatibleProvider(
-            (string) config('services.ai.url'),
-            config('services.ai.key'),
-            (string) config('services.ai.model'),
-            (int) config('services.ai.timeout', 30),
-            (int) config('services.ai.max_tokens', 1000),
-            (float) config('services.ai.temperature', 0.3),
-        ));
+        $this->app->bind(AiChatProvider::class, function (): AiChatProvider {
+            $ai = StoredSettings::aiConfig();
+
+            return new OpenAiCompatibleProvider(
+                $ai['url'],
+                $ai['key'],
+                $ai['model'],
+                $ai['timeout'],
+                $ai['max_tokens'],
+                $ai['temperature'],
+            );
+        });
 
         $this->app->bind(
             ResetPassword::class,

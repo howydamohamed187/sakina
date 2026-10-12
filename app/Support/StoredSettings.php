@@ -96,7 +96,43 @@ class StoredSettings
     {
         $key = self::thirdParty()?->google_map_key;
 
-        return filled($key) ? $key : null;
+        if (filled($key)) {
+            return $key;
+        }
+
+        $env = config('services.google_maps.key');
+
+        return filled($env) ? (string) $env : null;
+    }
+
+    /**
+     * @return array{provider: string, url: string, key: ?string, model: string, timeout: int, max_tokens: int, temperature: float}
+     */
+    public static function aiConfig(): array
+    {
+        $settings = self::thirdParty();
+
+        if ($settings === null) {
+            return [
+                'provider' => (string) config('services.ai.provider', 'openai'),
+                'url' => (string) config('services.ai.url', 'https://api.openai.com/v1'),
+                'key' => config('services.ai.key'),
+                'model' => (string) config('services.ai.model', 'gpt-4o-mini'),
+                'timeout' => (int) config('services.ai.timeout', 30),
+                'max_tokens' => (int) config('services.ai.max_tokens', 1000),
+                'temperature' => (float) config('services.ai.temperature', 0.3),
+            ];
+        }
+
+        return [
+            'provider' => $settings->ai_provider !== '' ? $settings->ai_provider : (string) config('services.ai.provider', 'openai'),
+            'url' => $settings->ai_base_url !== '' ? $settings->ai_base_url : (string) config('services.ai.url', 'https://api.openai.com/v1'),
+            'key' => filled($settings->ai_api_key) ? $settings->ai_api_key : config('services.ai.key'),
+            'model' => $settings->ai_model !== '' ? $settings->ai_model : (string) config('services.ai.model', 'gpt-4o-mini'),
+            'timeout' => $settings->ai_timeout > 0 ? $settings->ai_timeout : (int) config('services.ai.timeout', 30),
+            'max_tokens' => $settings->ai_max_tokens > 0 ? $settings->ai_max_tokens : (int) config('services.ai.max_tokens', 1000),
+            'temperature' => $settings->ai_temperature,
+        ];
     }
 
     public static function otpIsRandom(): bool

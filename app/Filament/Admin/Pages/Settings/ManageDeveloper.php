@@ -24,6 +24,11 @@ class ManageDeveloper extends SettingsPage
 
     protected static ?int $navigationSort = 4;
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     protected static function isSuperAdminOnly(): bool
     {
         return true;
