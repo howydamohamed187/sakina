@@ -103,7 +103,7 @@ return [
         'provider' => env('AI_PROVIDER', 'openai'),
         'url' => env('AI_BASE_URL', 'https://api.openai.com/v1'),
         'key' => env('AI_API_KEY'),
-        'model' => env('AI_MODEL', 'gpt-4o-mini'),
+        'model' => env('AI_MODEL', 'gpt-6-astra'),
         'timeout' => (int) env('AI_TIMEOUT', 30),
         'max_tokens' => (int) env('AI_MAX_TOKENS', 1000),
         'temperature' => (float) env('AI_TEMPERATURE', 0.3),

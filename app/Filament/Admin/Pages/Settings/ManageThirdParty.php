@@ -4,8 +4,6 @@ namespace App\Filament\Admin\Pages\Settings;
 
 use App\Filament\Concerns\AuthorizesSettingsPage;
 use App\Filament\Concerns\HasAdminFormLayout;
-use App\Filament\Forms\Components\LockedSecretInput;
-use App\Rules\KeepsEncryptedSetting;
 use App\Settings\ThirdPartySettings;
 use App\Support\EnvFile;
 use Filament\Forms\Components\FileUpload;
@@ -72,15 +70,30 @@ class ManageThirdParty extends SettingsPage
                         Tab::make(__('settings.sections.ai'))
                             ->icon('heroicon-o-sparkles')
                             ->schema([
-                                $this->envField('ai_provider'),
-                                $this->envField('ai_base_url'),
-                                $this->envField('ai_api_key'),
-                                $this->envField('ai_model'),
+                                TextInput::make('ai_provider')
+                                    ->label(__('settings.fields.ai_provider'))
+                                    ->required()
+                                    ->maxLength(100),
+                                TextInput::make('ai_base_url')
+                                    ->label(__('settings.fields.ai_base_url'))
+                                    ->required()
+                                    ->url()
+                                    ->maxLength(255),
+                                TextInput::make('ai_api_key')
+                                    ->label(__('settings.fields.ai_api_key'))
+                                    ->maxLength(2000),
+                                TextInput::make('ai_model')
+                                    ->label(__('settings.fields.ai_model'))
+                                    ->required()
+                                    ->maxLength(100),
                             ]),
                         Tab::make(__('settings.sections.map'))
                             ->icon('heroicon-o-map')
                             ->schema([
-                                $this->envField('google_map_key'),
+                                TextInput::make('google_map_key')
+                                    ->label(__('settings.fields.google_map_key'))
+                                    ->helperText(__('settings.helpers.google_map_key'))
+                                    ->maxLength(2000),
                             ]),
                     ])
                     ->persistTabInQueryString()
@@ -93,33 +106,14 @@ class ManageThirdParty extends SettingsPage
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    protected function mutateFormDataBeforeFill(array $data): array
-    {
-        foreach (array_keys(ThirdPartySettings::envMap()) as $name) {
-            $data[$name] = ThirdPartySettings::ciphertext($name);
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param  array<string, mixed>  $data
-     * @return array<string, mixed>
-     */
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $current = app(ThirdPartySettings::class);
 
-        foreach (array_keys(ThirdPartySettings::envMap()) as $name) {
-            $incoming = $data[$name] ?? null;
-
-            if (LockedSecretInput::isUnchanged($incoming) || ThirdPartySettings::isSameCiphertext($name, $incoming)) {
+        foreach (['ai_timeout', 'ai_max_tokens', 'ai_temperature'] as $name) {
+            if (! array_key_exists($name, $data)) {
                 $data[$name] = $current->{$name};
-
-                continue;
             }
-
-            $data[$name] = $this->castEnvAttribute($name, trim((string) $incoming));
         }
 
         return $data;
@@ -132,44 +126,8 @@ class ManageThirdParty extends SettingsPage
 
         foreach (ThirdPartySettings::envMap() as $attribute => $key) {
             $values[$key] = $settings->{$attribute};
-            $this->data[$attribute] = ThirdPartySettings::ciphertext($attribute);
         }
 
         app(EnvFile::class)->put($values);
-    }
-
-    private function envField(string $name): LockedSecretInput
-    {
-        return LockedSecretInput::make($name)
-            ->label(__('settings.fields.'.$name))
-            ->helperText(__('settings.helpers.env_synced'))
-            ->rules([
-                new KeepsEncryptedSetting($name, $this->plainRules($name)),
-            ]);
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function plainRules(string $name): array
-    {
-        return match ($name) {
-            'ai_base_url' => ['required', 'url', 'max:255'],
-            'ai_timeout' => ['required', 'integer', 'min:1', 'max:300'],
-            'ai_max_tokens' => ['required', 'integer', 'min:1', 'max:16000'],
-            'ai_temperature' => ['required', 'numeric', 'min:0', 'max:2'],
-            'ai_api_key', 'google_map_key' => ['nullable', 'string', 'max:2000'],
-            default => ['required', 'string', 'max:100'],
-        };
-    }
-
-    private function castEnvAttribute(string $name, string $value): string|int|float|null
-    {
-        return match ($name) {
-            'ai_timeout', 'ai_max_tokens' => (int) $value,
-            'ai_temperature' => (float) $value,
-            'ai_api_key', 'google_map_key' => $value === '' ? null : $value,
-            default => $value,
-        };
     }
 }

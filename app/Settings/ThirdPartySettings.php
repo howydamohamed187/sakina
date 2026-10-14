@@ -3,7 +3,6 @@
 namespace App\Settings;
 
 use App\Settings\Casts\NativeTypeCast;
-use Illuminate\Support\Facades\DB;
 use Spatie\LaravelSettings\Settings;
 
 class ThirdPartySettings extends Settings
@@ -28,7 +27,7 @@ class ThirdPartySettings extends Settings
 
     public ?string $ai_api_key = null;
 
-    public string $ai_model = 'gpt-4o-mini';
+    public string $ai_model = 'gpt-6-astra';
 
     public int $ai_timeout = 30;
 
@@ -47,14 +46,19 @@ class ThirdPartySettings extends Settings
     {
         return [
             'is_test' => new NativeTypeCast('bool'),
+            'ai_provider' => new NativeTypeCast('string'),
+            'ai_base_url' => new NativeTypeCast('string'),
+            'ai_api_key' => new NativeTypeCast('string'),
+            'ai_model' => new NativeTypeCast('string'),
             'ai_timeout' => new NativeTypeCast('int'),
             'ai_max_tokens' => new NativeTypeCast('int'),
             'ai_temperature' => new NativeTypeCast('float'),
+            'google_map_key' => new NativeTypeCast('string'),
         ];
     }
 
     /**
-     * Settings that are stored encrypted and mirrored to the environment file.
+     * Settings mirrored to the environment file.
      *
      * @return array<string, string>
      */
@@ -78,39 +82,6 @@ class ThirdPartySettings extends Settings
             'tranportal_id',
             'tranportal_password',
             'resource_key',
-            ...array_keys(self::envMap()),
         ];
-    }
-
-    public static function ciphertext(string $name): ?string
-    {
-        if (! array_key_exists($name, self::envMap())) {
-            return null;
-        }
-
-        $payload = DB::table(config('settings.repositories.database.table') ?? 'settings')
-            ->where('group', self::group())
-            ->where('name', $name)
-            ->value('payload');
-
-        if (! is_string($payload) || $payload === '') {
-            return null;
-        }
-
-        $decoded = json_decode($payload);
-
-        return is_string($decoded) && $decoded !== '' ? $decoded : null;
-    }
-
-    public static function isSameCiphertext(string $name, mixed $value): bool
-    {
-        if (! is_string($value)) {
-            return false;
-        }
-
-        $cipher = self::ciphertext($name);
-        $value = trim($value);
-
-        return $cipher !== null && $value !== '' && hash_equals($cipher, $value);
     }
 }
