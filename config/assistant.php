@@ -16,6 +16,9 @@ return [
     // Messages a customer can send per minute.
     'rate_limit_per_minute' => (int) env('ASSISTANT_RATE_LIMIT_PER_MINUTE', 10),
 
+    // Successful customer messages allowed per app-timezone day, across every conversation.
+    'daily_message_limit' => 5,
+
     // Maximum characters of an automatically generated conversation title.
     'title_max_length' => 60,
 

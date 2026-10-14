@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * Customer conversations with the Smart Assistant. Every lookup is scoped to the
@@ -23,7 +24,18 @@ class ChatService
         'what is', 'what are', 'who is', 'how do i', 'how to', 'how', 'why', 'when', 'where', 'can you', 'tell me about', 'explain',
     ];
 
-    public function __construct(private readonly AiAssistantService $assistant) {}
+    public function __construct(
+        private readonly AiAssistantService $assistant,
+        private readonly AssistantDailyQuota $quota,
+    ) {}
+
+    /**
+     * @return array{daily_limit: int, used_messages: int, remaining_messages: int}
+     */
+    public function usage(Customer $customer): array
+    {
+        return $this->quota->status($customer);
+    }
 
     /**
      * Returns the customer's open conversation, or opens a new one when none is open.
@@ -60,6 +72,7 @@ class ChatService
      *
      * @throws ModelNotFoundException when the conversation is not the customer's
      * @throws ConversationClosedException
+     * @throws DailyMessageLimitException
      * @throws ProviderException
      */
     public function send(Customer $customer, int $conversationId, string $message, ?string $locale = null): array
@@ -71,37 +84,47 @@ class ChatService
             throw new ConversationClosedException;
         }
 
-        $history = $conversation->messages()
-            ->reorder()
-            ->latest('id')
-            ->limit(max(0, (int) config('assistant.history_limit', 20)))
-            ->get(['id', 'role', 'content'])
-            ->reverse()
-            ->values();
+        $this->quota->reserve($customer);
 
-        $reply = $this->assistant->reply($history, $message, $locale);
+        try {
+            $history = $conversation->messages()
+                ->reorder()
+                ->latest('id')
+                ->limit(max(0, (int) config('assistant.history_limit', 20)))
+                ->get(['id', 'role', 'content'])
+                ->reverse()
+                ->values();
 
-        return DB::transaction(function () use ($conversation, $message, $reply): array {
-            $conversation = AiConversation::query()->lockForUpdate()->findOrFail($conversation->id);
+            $reply = $this->assistant->reply($history, $message, $locale);
 
-            if (! $conversation->isOpen()) {
-                throw new ConversationClosedException;
-            }
+            return DB::transaction(function () use ($conversation, $customer, $message, $reply): array {
+                $conversation = AiConversation::query()->lockForUpdate()->findOrFail($conversation->id);
 
-            $userMessage = $conversation->messages()->create(['role' => AiMessage::ROLE_USER, 'content' => $message]);
-            $assistantMessage = $conversation->messages()->create(['role' => AiMessage::ROLE_ASSISTANT, 'content' => $reply]);
+                if (! $conversation->isOpen()) {
+                    throw new ConversationClosedException;
+                }
 
-            $conversation->forceFill([
-                'title' => $conversation->title ?: self::titleFrom($message),
-                'last_message_at' => $assistantMessage->created_at,
-            ])->save();
+                $userMessage = $conversation->messages()->create(['role' => AiMessage::ROLE_USER, 'content' => $message]);
+                $assistantMessage = $conversation->messages()->create(['role' => AiMessage::ROLE_ASSISTANT, 'content' => $reply]);
 
-            return [
-                'conversation' => $conversation,
-                'user_message' => $userMessage,
-                'assistant_message' => $assistantMessage,
-            ];
-        });
+                $conversation->forceFill([
+                    'title' => $conversation->title ?: self::titleFrom($message),
+                    'last_message_at' => $assistantMessage->created_at,
+                ])->save();
+
+                $this->quota->commit($customer);
+
+                return [
+                    'conversation' => $conversation,
+                    'user_message' => $userMessage,
+                    'assistant_message' => $assistantMessage,
+                ];
+            });
+        } catch (Throwable $e) {
+            $this->quota->release($customer);
+
+            throw $e;
+        }
     }
 
     /**

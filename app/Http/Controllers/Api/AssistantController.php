@@ -8,6 +8,7 @@ use App\Http\Resources\AiMessageResource;
 use App\Models\Customer;
 use App\Services\Assistant\ChatService;
 use App\Services\Assistant\ConversationClosedException;
+use App\Services\Assistant\DailyMessageLimitException;
 use App\Services\Providers\ProviderException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -31,6 +32,7 @@ class AssistantController extends ApiController
             AiConversationResource::collection($paginator->getCollection())->resolve(),
             $paginator,
             __('api.assistant.conversations_ready'),
+            $this->chat->usage($customer),
         );
     }
 
@@ -45,7 +47,10 @@ class AssistantController extends ApiController
         ['conversation' => $conversation, 'created' => $created] = $this->chat->open($customer);
 
         return $this->success(
-            (new AiConversationResource($conversation))->resolve(),
+            [
+                ...(new AiConversationResource($conversation))->resolve(),
+                ...$this->chat->usage($customer),
+            ],
             __($created ? 'api.assistant.conversation_opened' : 'api.assistant.conversation_already_open'),
             $created ? 201 : 200,
         );
@@ -65,7 +70,10 @@ class AssistantController extends ApiController
             return $this->notFound();
         }
 
-        return $this->success((new AiConversationResource($model))->resolve(), __('api.assistant.conversation_ready'));
+        return $this->success([
+            ...(new AiConversationResource($model))->resolve(),
+            ...$this->chat->usage($customer),
+        ], __('api.assistant.conversation_ready'));
     }
 
     public function send(SendAssistantMessageRequest $request, int $conversation): JsonResponse
@@ -82,16 +90,19 @@ class AssistantController extends ApiController
             return $this->notFound();
         } catch (ConversationClosedException) {
             return $this->error(__('api.assistant.conversation_closed'), [], 409);
+        } catch (DailyMessageLimitException $e) {
+            return $this->error($e->getMessage(), [], 429, $e->usage);
         } catch (ProviderException $e) {
             report($e);
 
-            return $this->error(__('api.assistant.errors.'.$e->reason), [], $e->status());
+            return $this->error($e->getMessage(), [], $e->status());
         }
 
         return $this->success([
             'conversation' => (new AiConversationResource($result['conversation']))->resolve(),
             'user_message' => (new AiMessageResource($result['user_message']))->resolve(),
             'assistant_message' => (new AiMessageResource($result['assistant_message']))->resolve(),
+            ...$this->chat->usage($customer),
         ], __('api.assistant.message_sent'));
     }
 

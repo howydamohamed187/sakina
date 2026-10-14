@@ -96,6 +96,7 @@ return [
         'conversation_already_open' => 'You already have an open conversation.',
         'conversation_closed' => 'This conversation is closed, open a new conversation to continue.',
         'conversation_closed_done' => 'Conversation closed.',
+        'daily_limit_reached' => 'You have reached the daily message limit (:limit messages). You can try again tomorrow.',
         'errors' => [
             'timeout' => 'The assistant did not respond in time, please try again.',
             'failed' => 'The assistant is unavailable right now, please try later.',
