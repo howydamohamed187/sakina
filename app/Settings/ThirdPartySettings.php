@@ -2,6 +2,7 @@
 
 namespace App\Settings;
 
+use App\Settings\Casts\NativeTypeCast;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelSettings\Settings;
 
@@ -40,6 +41,16 @@ class ThirdPartySettings extends Settings
     public static function group(): string
     {
         return 'third_party';
+    }
+
+    public static function casts(): array
+    {
+        return [
+            'is_test' => new NativeTypeCast('bool'),
+            'ai_timeout' => new NativeTypeCast('int'),
+            'ai_max_tokens' => new NativeTypeCast('int'),
+            'ai_temperature' => new NativeTypeCast('float'),
+        ];
     }
 
     /**
